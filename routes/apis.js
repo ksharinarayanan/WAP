@@ -29,24 +29,18 @@ router.post("/add/RRpair/", (req, res) => {
     return;
   }
 
-  const projectName = req.cookie["projectName"];
-  //
-  // const query = {"name": projectName}
-  //
-  //
-  // .then(item => console.log("Updated!"))
-  // .catch(err => console.log("Failed updating", err))
+  const projectName = req.cookies["projectName"].name;
 
-  // var rrpair = new RRpair(req.body);
-  //
-  // rrpair
-  //   .save()
-  //   .then((item) => {
-  //     console.log("Item saved to DB!");
-  //   })
-  //   .catch((err) => {
-  //     console.log("unable to save to database", err);
-  //   });
+  Project.update(
+    { name: projectName },
+    {
+      $push: { logs: req.body },
+    }
+  )
+    .then((item) => res.status(200).json({ message: "Added!" }))
+    .catch((err) =>
+      res.status(500).json({ message: "Failed to add the RR pair!" })
+    );
 });
 
 // fetch all the request-response pair for a particular project!
@@ -57,8 +51,6 @@ router.get("/get/RRpair/", (req, res) => {
   }
 
   const projectName = req.cookies["projectName"].name;
-
-  console.log(projectName);
 
   Project.findOne({ name: projectName })
     .then((project) => res.status(200).json({ project: project }))
