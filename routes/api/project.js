@@ -3,9 +3,17 @@ const router = require("express").Router();
 const ProjectName = require("../../models/ProjectName");
 const Project = require("../../models/Project");
 
+const projectSelected = (req) => {
+  if (req.cookies === undefined || req.cookies["projectID"] === undefined) {
+    return false;
+  }
+  return true;
+};
+
 // initialize an empty project
-const addEmptyProject = (project) => {
+const addEmptyProject = (project, id) => {
   const data = {
+    _id: id,
     name: project.name,
   };
   const projectData = new Project(data);
@@ -24,10 +32,11 @@ router.post("/add/", (req, res) => {
 
   projectName
     .save()
-    .then((item) => {
-      res.cookie("projectName", projectName);
+    .then(async (item) => {
+      const projectID = item["id"];
+      addEmptyProject(projectName, item["_id"]);
 
-      addEmptyProject(projectName);
+      res.cookie("projectID", projectID);
 
       res.status(200).json({ message: "Project saved!" });
     })
@@ -37,8 +46,8 @@ router.post("/add/", (req, res) => {
     });
 });
 
-// fetches all the project names
-router.get("/fetch/allNames/", (req, res) => {
+// fetches all the project meta data
+router.get("/fetch/all/", (req, res) => {
   ProjectName.find({}, (err, result) => {
     if (err) {
       res.send(err);
@@ -46,6 +55,31 @@ router.get("/fetch/allNames/", (req, res) => {
       res.send(result);
     }
   });
+});
+
+// fetch the current project details
+router.get("/fetch/details/", (req, res) => {
+  if (projectSelected(req) === false) {
+    res.status(401).json({ message: "No project is currently selected!" });
+    return;
+  }
+
+  const projectID = req.cookies["projectID"];
+
+  Project.findOne({ _id: projectID })
+    .then((project) => res.status(200).json({ project: project }))
+    .catch((err) => {
+      console.log("Err", err);
+      res.status(500).json({ message: "Operation failed!" });
+    });
+});
+
+// switch working project
+router.post("/switch/", (req, res) => {
+  const newProjectID = req.body.projectID;
+  res
+    .cookie("projectID", newProjectID)
+    .send({ message: "Switched to " + newProjectID });
 });
 
 module.exports = router;

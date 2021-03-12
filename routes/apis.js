@@ -13,7 +13,7 @@ const Project = require("../models/Project");
 const projectAPI = require("./api/project");
 
 const projectSelected = (req) => {
-  if (req.cookies === undefined || req.cookies["projectName"] === undefined) {
+  if (req.cookies === undefined || req.cookies["projectID"] === undefined) {
     return false;
   }
   return true;
@@ -29,10 +29,10 @@ router.post("/add/RRpair/", (req, res) => {
     return;
   }
 
-  const projectName = req.cookies["projectName"].name;
+  const projectID = req.cookies["projectID"];
 
   Project.update(
-    { name: projectName },
+    { _id: projectID },
     {
       $push: { logs: req.body },
     }
@@ -50,9 +50,9 @@ router.get("/get/RRpair/", (req, res) => {
     return;
   }
 
-  const projectName = req.cookies["projectName"].name;
+  const projectID = req.cookies["projectID"].name;
 
-  Project.findOne({ name: projectName })
+  Project.findOne({ _id: projectID })
     .then((project) => res.status(200).json({ project: project }))
     .catch((err) => {
       console.log("Err", err);
