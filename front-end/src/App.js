@@ -1,10 +1,25 @@
-import "./App.css";
+import React, { useState, useEffect } from "react";
+import socketIOClient from "socket.io-client";
+const ENDPOINT = "http://127.0.0.1:4000";
 
 function App() {
+  const [response, setResponse] = useState("");
+
+  useEffect(() => {
+    const socket = socketIOClient(ENDPOINT, {
+      transports: ["websocket", "polling", "flashsocket"],
+    });
+    socket.on("FromAPI", (data) => {
+      setResponse(data);
+    });
+
+    return () => socket.disconnect();
+  }, []);
+
   return (
-    <div className="App">
-      <h1>Hello</h1>
-    </div>
+    <p>
+      It's <time dateTime={response}>{response}</time>
+    </p>
   );
 }
 
