@@ -23,6 +23,7 @@ router.use("/projects", projectAPI);
 
 // add request-response pair to a particular project!
 router.post("/add/RRpair/", (req, res) => {
+
   // return 401 if a project is not selected!
   if (projectSelected(req) === false) {
     res.status(401).json({ message: "No project is currently selected!" });
@@ -31,7 +32,11 @@ router.post("/add/RRpair/", (req, res) => {
 
   const projectID = req.cookies["projectID"];
 
-  Project.update(
+  // emit event
+  const eventEmitter = req.app.get('eventEmitter');
+  eventEmitter.emit('newRRpair', req.body)
+
+  Project.updateOne(
     { _id: projectID },
     {
       $push: { logs: req.body },
