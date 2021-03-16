@@ -4,12 +4,6 @@ function addRRpair(RRpair) {
   const request = RRpair.request;
   const response = RRpair.response;
 
-  // console.log("Resp", response);
-
-  console.log("Request", request);
-  console.log("Response", response);
-
-
   axios.post("http://localhost:4000/api/add/RRpair", {
     request: request,
     response: response,
