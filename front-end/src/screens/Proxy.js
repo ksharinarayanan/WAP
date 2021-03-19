@@ -59,7 +59,7 @@ function LogsTable({ rrPairs }) {
                 </TableHead>
                 <TableBody>
                     {rrPairs.map((rrPair, index) => {
-                        if (index == 1) {
+                        if (index === 1) {
                             console.log("Received", rrPair);
                         }
                         const request = rrPair.request;

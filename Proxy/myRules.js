@@ -6,7 +6,7 @@ function addRRpair(RRpair) {
   let projectID;
   var fs = require('fs');
   fs.readFile('activeProject', 'utf8', (err, data) => {
-    if (err) throw err;
+    if (err) console.log("Error", err);
     projectID = data;
   })
 
