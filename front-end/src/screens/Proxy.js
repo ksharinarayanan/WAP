@@ -9,6 +9,8 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import socketIOClient from "socket.io-client";
 import AlertMessage from "../components/AlertMessage";
+import { Typography } from "@material-ui/core";
+import Cookies from "universal-cookie";
 const ENDPOINT = "http://127.0.0.1:4000";
 
 const useStyles = makeStyles({
@@ -27,6 +29,10 @@ const useStyles = makeStyles({
 function LogsTable({ rrPairs }) {
     const classes = useStyles();
 
+    console.log("Without", rrPairs[0]);
+    const t_rrPairs = rrPairs.reverse();
+    console.log("After", rrPairs[0]);
+
     return (
         <TableContainer component={Paper} className={classes.paper}>
             <Table
@@ -40,14 +46,11 @@ function LogsTable({ rrPairs }) {
                         <TableCell
                             align="center"
                             className={classes.headerCell}
-                            style={{ width: 10 }}
+                            numeric
                         >
                             #
                         </TableCell>
-                        <TableCell
-                            className={classes.headerCell}
-                            style={{ width: 100 }}
-                        >
+                        <TableCell className={classes.headerCell}>
                             Method
                         </TableCell>
                         <TableCell className={classes.headerCell}>
@@ -62,25 +65,51 @@ function LogsTable({ rrPairs }) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rrPairs.map((rrPair, index) => {
+                    {t_rrPairs.map((rrPair, index) => {
+                        if (index == 1) {
+                            console.log("Received", rrPair);
+                        }
                         const request = rrPair.request;
                         const response = rrPair.response;
+                        if (!request || !response) {
+                            return null;
+                        }
                         return (
                             <TableRow key={index}>
                                 <TableCell
                                     component="th"
                                     scope="row"
                                     align="center"
+                                    numeric
+                                    style={{
+                                        overflow: "hidden",
+                                        maxWidth: 5,
+                                    }}
                                 >
                                     {index + 1}
                                 </TableCell>
                                 <TableCell>{request.method}</TableCell>
-                                <TableCell>
+                                <TableCell
+                                    style={{
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        maxWidth: 400,
+                                    }}
+                                >
                                     {request.protocol +
                                         "://" +
                                         request.hostname}
                                 </TableCell>
-                                <TableCell>{request.path}</TableCell>
+                                <TableCell
+                                    style={{
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        maxWidth: 400,
+                                    }}
+                                >
+                                    {request.path}
+                                </TableCell>
                                 <TableCell>{response.statusCode}</TableCell>
                             </TableRow>
                         );
@@ -95,8 +124,10 @@ function Proxy(props) {
     const [rrPairs, setRRpairs] = useState([]);
 
     const [alertMessage, setAlertMessage] = useState(null);
+    const cookies = new Cookies();
 
     useEffect(() => {
+        cookies.set("projectID", "6050b1ac7f8a3377382aee55", { path: "/" });
         (async function fetchPairs() {
             fetch("/api/get/RRpair/")
                 .then((res) => res.json())
@@ -106,19 +137,20 @@ function Proxy(props) {
                         "No project is currently selected!"
                     )
                         setAlertMessage(result["message"]);
-                    console.log("Ressss", result);
+                    else {
+                        const logs = result["project"]["logs"];
+                        setRRpairs(logs);
+                    }
                 })
                 .catch((err) => console.log("err", err));
         })();
-        // const initialRRpairs = await fetchPairs();
-        // console.log("Response", initialRRpairs);
-        // setRRpairs(initialRRpairs);
 
         const socket = socketIOClient(ENDPOINT, {
             transports: ["websocket", "polling", "flashsocket"],
         });
         socket.on("newRRpair", (data) => {
             setRRpairs((rrPairs) => rrPairs.concat(data));
+            console.log("REv", rrPairs.reverse());
         });
 
         return () => socket.disconnect();
@@ -127,9 +159,18 @@ function Proxy(props) {
     return (
         <div>
             {alertMessage ? (
-                <AlertMessage type="warning">{alertMessage}</AlertMessage>
+                <AlertMessage type="warning">
+                    <Typography color="error">{alertMessage}</Typography>
+                </AlertMessage>
             ) : null}
             <LogsTable rrPairs={rrPairs} />
+            {rrPairs.length === 0 ? (
+                <AlertMessage type="info">
+                    <Typography color="primary">
+                        Logs empty right now
+                    </Typography>
+                </AlertMessage>
+            ) : null}
         </div>
     );
 }

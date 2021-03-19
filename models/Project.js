@@ -19,6 +19,12 @@ const RRpairSchema = new Schema({
     body: {
       type: String,
     },
+    method: {
+      type: String
+    },
+    protocol: {
+      type: String
+    }
   },
 
   response: {

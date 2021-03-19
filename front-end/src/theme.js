@@ -6,6 +6,10 @@ const theme = createMuiTheme({
             main: "#7b53c1",
         },
     },
+    typography: {
+        // TODO: Check if Cascadia code is available in MAC
+        fontFamily: ["cascadia code"].join(","),
+    },
 });
 
 export default theme;

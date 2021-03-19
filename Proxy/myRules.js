@@ -4,12 +4,12 @@ function addRRpair(RRpair) {
   const request = RRpair.request;
   const response = RRpair.response;
 
-  console.log("Incoming", request)
-
   axios.post("http://localhost:4000/api/add/RRpair", {
     request: request,
     response: response,
-  });
+  }, {withCredentials: true, headers: {
+    Cookie: "projectID=6050b1ac7f8a3377382aee55;"
+  }});
 }
 
 function isImage(request, response) {
