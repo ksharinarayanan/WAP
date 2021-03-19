@@ -39,7 +39,6 @@ function LogsTable({ rrPairs }) {
                         <TableCell
                             align="center"
                             className={classes.headerCell}
-                            numeric
                         >
                             #
                         </TableCell>
@@ -59,9 +58,9 @@ function LogsTable({ rrPairs }) {
                 </TableHead>
                 <TableBody>
                     {rrPairs.map((rrPair, index) => {
-                        if (index === 1) {
-                            console.log("Received", rrPair);
-                        }
+                        // if (index === 1) {
+                        //     console.log("Received", rrPair);
+                        // }
                         const request = rrPair.request;
                         const response = rrPair.response;
                         if (!request || !response) {
@@ -73,7 +72,6 @@ function LogsTable({ rrPairs }) {
                                     component="th"
                                     scope="row"
                                     align="center"
-                                    numeric
                                     style={{
                                         overflow: "hidden",
                                         maxWidth: 5,
@@ -120,7 +118,6 @@ function Proxy(props) {
     const cookies = new Cookies();
 
     useEffect(() => {
-        cookies.set("projectID", "6050b1ac7f8a3377382aee55", { path: "/" });
         (async function fetchPairs() {
             fetch("/api/get/RRpair/")
                 .then((res) => res.json())
@@ -131,6 +128,7 @@ function Proxy(props) {
                     )
                         setAlertMessage(result["message"]);
                     else {
+                        // console.log("Cooky", cookies.get('projectID'))
                         const logs = result["project"]["logs"];
                         setRRpairs(logs);
                     }
@@ -143,7 +141,6 @@ function Proxy(props) {
         });
         socket.on("newRRpair", (data) => {
             setRRpairs((rrPairs) => rrPairs.concat(data));
-            console.log("REv", rrPairs.reverse());
         });
 
         return () => socket.disconnect();

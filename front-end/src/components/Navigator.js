@@ -26,6 +26,7 @@ import Dashboard from "../screens/Dashboard";
 import Proxy from "../screens/Proxy";
 import Resender from "../screens/Resender";
 import Fuzzer from "../screens/Fuzzer";
+import ProjectSwitcher from "./ProjectSwitcher";
 
 const drawerWidth = 240;
 
@@ -88,6 +89,10 @@ const useStyles = makeStyles((theme) => ({
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
+    },
+    projectSwitcher: {
+        position: "absolute",
+        right: 20,
     },
 }));
 
@@ -176,9 +181,9 @@ export default function Navigator() {
                     <Typography variant="h6" noWrap>
                         {getTitle(currentIndex)}
                     </Typography>
-                    {/* <Typography variant="h6" noWrap className={}>
-                        Hello
-                    </Typography> */}
+                    <div className={classes.projectSwitcher}>
+                        <ProjectSwitcher />
+                    </div>
                 </Toolbar>
             </AppBar>
             <Drawer

@@ -5,12 +5,12 @@ const express = require("express");
 const http = require("http");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
-const Emitter = require("events")
+const Emitter = require("events");
 const socketIO = require("socket.io");
 
 const app = express();
 
-app.use(express.json());
+app.use(express.json({ limit: "500mb" }));
 app.use(cookieParser());
 
 const routes = require("./routes/main");
@@ -24,8 +24,8 @@ app.use("/", routes);
 
 // connecting to mongo DB
 mongoose
-  .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
-  .catch((err) => console.log(err));
+    .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+    .catch((err) => console.log(err));
 
 const port = process.env.PORT || 4000;
 
@@ -36,13 +36,12 @@ server.listen(port, () => console.log(`Server started at port ${port}`));
 // Event emitter
 const eventEmitter = new Emitter();
 
-app.set('eventEmitter', eventEmitter);
+app.set("eventEmitter", eventEmitter);
 
 const io = socketIO(server);
 
-io.on('connection', (socket) => {
-  eventEmitter.on('newRRpair', data => {
-      socket.emit('newRRpair', data);
-  });
-
-})
+io.on("connection", (socket) => {
+    eventEmitter.on("newRRpair", (data) => {
+        socket.emit("newRRpair", data);
+    });
+});
