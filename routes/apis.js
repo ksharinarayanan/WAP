@@ -55,7 +55,7 @@ router.get("/get/RRpair/", (req, res) => {
     return;
   }
 
-  const projectID = req.cookies["projectID"].name;
+  const projectID = req.cookies["projectID"];
 
   Project.findOne({ _id: projectID })
     .then((project) => res.status(200).json({ project: project }))

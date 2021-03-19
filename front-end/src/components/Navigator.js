@@ -96,7 +96,8 @@ export default function Navigator() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
 
-    const [currentPage, setCurrentPage] = React.useState(<Dashboard />);
+    const [currentPage, setCurrentPage] = React.useState(<Proxy />);
+    const [currentIndex, setCurrentIndex] = React.useState(1);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -138,6 +139,22 @@ export default function Navigator() {
         }
     };
 
+    const getTitle = (index) => {
+        switch (index) {
+            case 0:
+                return "Dashboard";
+                break;
+            case 1:
+                return "Proxy";
+                break;
+            case 2:
+                return "Resender";
+                break;
+            case 3:
+                return "Fuzzer";
+        }
+    };
+
     return (
         <div className={classes.root}>
             <CssBaseline />
@@ -160,7 +177,7 @@ export default function Navigator() {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" noWrap>
-                        WAP ~ Web attacking proxy!
+                        {getTitle(currentIndex)}
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -193,9 +210,10 @@ export default function Navigator() {
                             <ListItem
                                 button
                                 key={text}
-                                onClick={() =>
-                                    setCurrentPage(getComponent(index))
-                                }
+                                onClick={() => {
+                                    setCurrentPage(getComponent(index));
+                                    setCurrentIndex(index);
+                                }}
                             >
                                 <ListItemIcon>{getIcon(index)}</ListItemIcon>
                                 <ListItemText primary={text} />
