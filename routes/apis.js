@@ -30,7 +30,6 @@ router.post("/add/RRpair/", (req, res) => {
     }
 
     const projectID = req.cookies["projectID"];
-    console.log("Received", req.body.request.hostname);
 
     // emit event
     const eventEmitter = req.app.get("eventEmitter");
@@ -43,7 +42,6 @@ router.post("/add/RRpair/", (req, res) => {
         }
     )
         .then((item) => {
-            console.log("Added", req.body.request.hostname);
             res.status(200).json({ message: "Added!" });
         })
         .catch((err) =>
