@@ -55,6 +55,21 @@ router.post("/add/", (req, res) => {
         });
 });
 
+// deletes a project
+router.post("/delete/", (req, res) => {
+    const projectID = req.body.projectID;
+
+    ProjectName.deleteOne({ _id: projectID })
+        .then((item) => {
+            Project.deleteOne({ _id: projectID })
+                .then((item) =>
+                    res.status(200).send({ message: `${projectID} deleted!` })
+                )
+                .catch((err) => console.log("Error", err));
+        })
+        .catch((err) => console.log("Error", err));
+});
+
 // fetches all the project meta data
 router.get("/fetch/all/", (req, res) => {
     ProjectName.find({}, (err, result) => {

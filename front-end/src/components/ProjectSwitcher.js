@@ -8,12 +8,16 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
+    IconButton,
+    Tooltip,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import AddIcon from "@material-ui/icons/Add";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import axios from "axios";
-import Cookies from "universal-cookie";
+import AlertDialog from "./AlertDialog";
+import Toast from "./Toast";
 
 const useStyles = makeStyles({
     projectSwitcher: {
@@ -24,11 +28,19 @@ const useStyles = makeStyles({
 
 function ProjectSwitcher(props) {
     const classes = useStyles();
-    const cookies = new Cookies();
 
     const [currentProject, setCurrentProject] = useState(null);
+    const [deleteDialog, setDeleteDialog] = useState(false);
+    const [deleteProjectID, setDeleteProjectID] = useState(null);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const closeDeleteDialog = () => {
+        setDeleteDialog(false);
+    };
+    const openDeleteDialog = () => {
+        setDeleteDialog(true);
+    };
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -52,6 +64,7 @@ function ProjectSwitcher(props) {
             })
             .catch((err) => {
                 console.log("Error while switching projects", err);
+                setToast({ msg: "An error occurred!", type: "error" });
             })
             .finally(() => {
                 handleClose();
@@ -61,6 +74,8 @@ function ProjectSwitcher(props) {
     const [projects, setProjects] = useState([]);
     const [open, setOpen] = useState(false);
     const [newName, setNewName] = useState("");
+    const [openToast, setOpenToast] = useState(true);
+    const [toast, setToast] = useState(null);
 
     const handleDialogOpen = () => {
         setOpen(true);
@@ -68,6 +83,10 @@ function ProjectSwitcher(props) {
 
     const handleDialogClose = () => {
         setOpen(false);
+    };
+
+    const toggleToast = () => {
+        setOpenToast((curr) => !curr);
     };
 
     const addNewProject = () => {
@@ -81,17 +100,54 @@ function ProjectSwitcher(props) {
                     _id: data.data["projectID"],
                     name: name,
                 };
-                // cookies.set("projectID", newProject._id, { path: "/" });
                 setCurrentProject(newProject);
                 setProjects((projects) => projects.concat(newProject));
                 window.location.reload();
             })
             .catch((err) => {
                 console.log("Error", err);
+                setToast({ msg: "An error occurred!", type: "error" });
             })
             .finally(() => {
                 handleDialogClose();
                 handleClose();
+            });
+    };
+
+    const deleteProject = (projectID) => {
+        // asks for confirmation
+
+        setDeleteProjectID(projectID);
+        setDeleteDialog(true);
+    };
+
+    const handleYesClose = (projectID) => {
+        // actually deletes the project
+        axios
+            .post("/api/projects/delete/", {
+                projectID: projectID,
+            })
+            .then((data) => {
+                // modify state
+
+                function remove(project) {
+                    return project._id !== projectID;
+                }
+
+                setProjects((projects) => projects.filter(remove));
+                setToast({
+                    msg: "Project deleted successfully!",
+                    type: "success",
+                });
+            })
+            .catch((err) => {
+                console.log("err", err);
+                setToast({ msg: "An error occurred!", type: "error" });
+            })
+            .finally(() => {
+                handleClose();
+                setDeleteProjectID(null);
+                setDeleteDialog(false);
             });
     };
 
@@ -130,7 +186,9 @@ function ProjectSwitcher(props) {
                 aria-controls="simple-menu"
                 aria-haspopup="true"
             >
-                {currentProject ? currentProject.name : "Select a project"}
+                {currentProject !== null
+                    ? currentProject.name
+                    : "Select a project"}
                 <ArrowDropDownIcon />
             </Button>
             <Menu
@@ -142,19 +200,65 @@ function ProjectSwitcher(props) {
             >
                 <MenuItem onClick={handleDialogOpen}>
                     <AddIcon style={{ marginRight: 15 }} />
-                    Add project
+                    Add and switch to project
                 </MenuItem>
                 {projects.map((project, index) => {
                     // dont render the current project name
+                    if (
+                        currentProject !== null &&
+                        project._id === currentProject._id
+                    )
+                        return (
+                            <MenuItem key={index} disabled>
+                                <div
+                                    onClick={() =>
+                                        switchProject(project._id, project.name)
+                                    }
+                                >
+                                    {project.name} (Active)
+                                </div>
+                                <Tooltip title="Delete">
+                                    <IconButton
+                                        aria-label="delete"
+                                        style={{
+                                            position: "absolute",
+                                            right: 10,
+                                        }}
+                                        onClick={() =>
+                                            deleteProject(project._id)
+                                        }
+                                    >
+                                        <DeleteOutlineIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </MenuItem>
+                        );
                     return (
-                        <MenuItem
-                            key={index}
-                            onClick={() =>
-                                switchProject(project._id, project.name)
-                            }
-                        >
-                            {project.name}
-                        </MenuItem>
+                        <div>
+                            <MenuItem key={index}>
+                                <div
+                                    onClick={() =>
+                                        switchProject(project._id, project.name)
+                                    }
+                                >
+                                    {project.name}
+                                </div>
+                                <Tooltip title="Delete">
+                                    <IconButton
+                                        aria-label="delete"
+                                        style={{
+                                            position: "absolute",
+                                            right: 10,
+                                        }}
+                                        onClick={() =>
+                                            deleteProject(project._id)
+                                        }
+                                    >
+                                        <DeleteOutlineIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </MenuItem>
+                        </div>
                     );
                 })}
             </Menu>
@@ -188,6 +292,14 @@ function ProjectSwitcher(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
+            <AlertDialog
+                open={deleteDialog}
+                handleClickOpen={openDeleteDialog}
+                handleClose={closeDeleteDialog}
+                handleYesClose={handleYesClose}
+                projectID={deleteProjectID}
+            />
+            <Toast open={openToast} toggleToast={toggleToast} toast={toast} />
         </div>
     );
 }

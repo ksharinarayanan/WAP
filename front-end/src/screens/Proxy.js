@@ -10,7 +10,6 @@ import Paper from "@material-ui/core/Paper";
 import socketIOClient from "socket.io-client";
 import AlertMessage from "../components/AlertMessage";
 import { Typography } from "@material-ui/core";
-import Cookies from "universal-cookie";
 const ENDPOINT = "http://127.0.0.1:4000";
 
 const useStyles = makeStyles({
@@ -115,7 +114,6 @@ function Proxy(props) {
     const [rrPairs, setRRpairs] = useState([]);
 
     const [alertMessage, setAlertMessage] = useState(null);
-    const cookies = new Cookies();
 
     useEffect(() => {
         (async function fetchPairs() {
@@ -128,7 +126,6 @@ function Proxy(props) {
                     )
                         setAlertMessage(result["message"]);
                     else {
-                        // console.log("Cooky", cookies.get('projectID'))
                         const logs = result["project"]["logs"];
                         setRRpairs(logs);
                     }
