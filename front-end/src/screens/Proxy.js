@@ -1,4 +1,3 @@
-import { Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -9,6 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import socketIOClient from "socket.io-client";
+import AlertMessage from "../components/AlertMessage";
 const ENDPOINT = "http://127.0.0.1:4000";
 
 const useStyles = makeStyles({
@@ -94,7 +94,26 @@ function LogsTable({ rrPairs }) {
 function Proxy(props) {
     const [rrPairs, setRRpairs] = useState([]);
 
+    const [alertMessage, setAlertMessage] = useState(null);
+
     useEffect(() => {
+        (async function fetchPairs() {
+            fetch("/api/get/RRpair/")
+                .then((res) => res.json())
+                .then((result) => {
+                    if (
+                        result["message"] ===
+                        "No project is currently selected!"
+                    )
+                        setAlertMessage(result["message"]);
+                    console.log("Ressss", result);
+                })
+                .catch((err) => console.log("err", err));
+        })();
+        // const initialRRpairs = await fetchPairs();
+        // console.log("Response", initialRRpairs);
+        // setRRpairs(initialRRpairs);
+
         const socket = socketIOClient(ENDPOINT, {
             transports: ["websocket", "polling", "flashsocket"],
         });
@@ -107,6 +126,9 @@ function Proxy(props) {
 
     return (
         <div>
+            {alertMessage ? (
+                <AlertMessage type="warning">{alertMessage}</AlertMessage>
+            ) : null}
             <LogsTable rrPairs={rrPairs} />
         </div>
     );

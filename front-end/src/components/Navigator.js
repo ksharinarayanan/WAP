@@ -111,15 +111,14 @@ export default function Navigator() {
         switch (index) {
             case 0:
                 return <DashboardIcon />;
-                break;
             case 1:
                 return <TimelineIcon />;
-                break;
             case 2:
                 return <RepeatIcon />;
-                break;
             case 3:
                 return <FastForwardIcon />;
+            default:
+                return null;
         }
     };
 
@@ -127,15 +126,14 @@ export default function Navigator() {
         switch (index) {
             case 0:
                 return <Dashboard />;
-                break;
             case 1:
                 return <Proxy />;
-                break;
             case 2:
                 return <Resender />;
-                break;
             case 3:
                 return <Fuzzer />;
+            default:
+                return null;
         }
     };
 
@@ -143,15 +141,14 @@ export default function Navigator() {
         switch (index) {
             case 0:
                 return "Dashboard";
-                break;
             case 1:
                 return "Proxy";
-                break;
             case 2:
                 return "Resender";
-                break;
             case 3:
                 return "Fuzzer";
+            default:
+                return null;
         }
     };
 
