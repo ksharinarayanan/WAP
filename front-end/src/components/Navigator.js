@@ -96,8 +96,8 @@ export default function Navigator() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
 
-    const [currentPage, setCurrentPage] = React.useState(<Proxy />);
-    const [currentIndex, setCurrentIndex] = React.useState(1);
+    const [currentPage, setCurrentPage] = React.useState(<Dashboard />);
+    const [currentIndex, setCurrentIndex] = React.useState(0);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -176,6 +176,9 @@ export default function Navigator() {
                     <Typography variant="h6" noWrap>
                         {getTitle(currentIndex)}
                     </Typography>
+                    {/* <Typography variant="h6" noWrap className={}>
+                        Hello
+                    </Typography> */}
                 </Toolbar>
             </AppBar>
             <Drawer

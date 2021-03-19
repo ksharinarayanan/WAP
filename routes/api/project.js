@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const axios = require("axios")
 
 const ProjectName = require("../../models/ProjectName");
 const Project = require("../../models/Project");
@@ -38,7 +39,14 @@ router.post("/add/", (req, res) => {
 
       res.cookie("projectID", projectID);
 
-      res.status(200).json({ message: "Project saved!" });
+      axios.post('http://localhost:6500/switchProject/', {
+        "projectID": projectID
+      })
+      .catch(err => {
+        console.log("Error", err)
+      })
+
+      res.status(200).json({ message: "Project saved " + projectID });
     })
     .catch((err) => {
       console.log(err);
@@ -77,6 +85,12 @@ router.get("/fetch/details/", (req, res) => {
 // switch working project
 router.post("/switch/", (req, res) => {
   const newProjectID = req.body.projectID;
+  axios.post('http://localhost:6500/switchProject/', {
+    "projectID": newProjectID
+  })
+  .catch(err => {
+    console.log("Error", err)
+  })
   res
     .cookie("projectID", newProjectID)
     .send({ message: "Switched to " + newProjectID });

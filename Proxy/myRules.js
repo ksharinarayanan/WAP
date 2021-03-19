@@ -3,13 +3,23 @@ const axios = require("axios");
 function addRRpair(RRpair) {
   const request = RRpair.request;
   const response = RRpair.response;
+  let projectID;
+  var fs = require('fs');
+  fs.readFile('activeProject', 'utf8', (err, data) => {
+    if (err) throw err;
+    projectID = data;
+  })
 
   axios.post("http://localhost:4000/api/add/RRpair", {
     request: request,
     response: response,
-  }, {withCredentials: true, headers: {
-    Cookie: "projectID=6050b1ac7f8a3377382aee55;"
-  }});
+  }, {
+    withCredentials: true,
+    headers: {
+      Cookie: "projectID=60547825af2eec9c3073310e;"
+    }
+  })
+  .catch(err => {throw err})
 }
 
 function isImage(request, response) {

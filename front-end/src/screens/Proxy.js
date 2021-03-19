@@ -29,18 +29,11 @@ const useStyles = makeStyles({
 function LogsTable({ rrPairs }) {
     const classes = useStyles();
 
-    console.log("Without", rrPairs[0]);
-    const t_rrPairs = rrPairs.reverse();
-    console.log("After", rrPairs[0]);
+    // TODO: Reverse the array before rendering
 
     return (
         <TableContainer component={Paper} className={classes.paper}>
-            <Table
-                className={classes.table}
-                size="small"
-                aria-label="a dense table"
-                stickyHeader
-            >
+            <Table className={classes.table} size="small" stickyHeader>
                 <TableHead>
                     <TableRow>
                         <TableCell
@@ -65,7 +58,7 @@ function LogsTable({ rrPairs }) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {t_rrPairs.map((rrPair, index) => {
+                    {rrPairs.map((rrPair, index) => {
                         if (index == 1) {
                             console.log("Received", rrPair);
                         }
