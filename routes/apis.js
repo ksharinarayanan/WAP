@@ -29,6 +29,10 @@ router.post("/add/RRpair/", (req, res) => {
         return;
     }
 
+    if (req.body.request.hostname === "localhost") {
+        return;
+    }
+
     const projectID = req.cookies["projectID"];
 
     // emit event
