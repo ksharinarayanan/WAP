@@ -1,4 +1,5 @@
 import { createMuiTheme } from "@material-ui/core/styles";
+import "@fontsource/cascadia-code";
 
 const theme = createMuiTheme({
     palette: {
@@ -7,8 +8,7 @@ const theme = createMuiTheme({
         },
     },
     typography: {
-        // TODO: Check if Cascadia code is available in MAC
-        fontFamily: ["cascadia code"].join(","),
+        fontFamily: "cascadia code",
     },
 });
 

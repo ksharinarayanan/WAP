@@ -10,6 +10,7 @@ import Paper from "@material-ui/core/Paper";
 import socketIOClient from "socket.io-client";
 import AlertMessage from "../components/AlertMessage";
 import { Typography } from "@material-ui/core";
+import { DataGrid } from "@material-ui/data-grid";
 const ENDPOINT = "http://127.0.0.1:4000";
 
 const useStyles = makeStyles({
@@ -23,100 +24,100 @@ const useStyles = makeStyles({
         backgroundColor: "#000",
         color: "#fff",
     },
+    grid: {
+        "& .MuiDataGrid-colCellWrapper": {
+            backgroundColor: "#000",
+            color: "#fff",
+            margin: 0,
+            textAlign: "center",
+        },
+        "& .MuiDataGrid-root": {
+            height: "120%",
+            maxWidth: "100%",
+        },
+        "& .MuiDataGrid-colCell": {
+            textAlign: "center",
+            align: "center",
+            alignSelf: "center",
+        },
+    },
 });
 
-function LogsTable({ rrPairs }) {
+function LogsTable({ rrPairs, loading }) {
     const classes = useStyles();
 
-    // TODO: Reverse the array before rendering
+    const columns = [
+        {
+            field: "id",
+            headerName: "ID",
+            align: "center",
+            width: 80,
+        },
+        {
+            field: "method",
+            headerName: "METHOD",
+            align: "center",
+            valueGetter: (params) => {
+                return params.row.request.method;
+            },
+        },
+        {
+            field: "host",
+            headerName: "HOST",
+            width: 320,
+            valueGetter: (params) => params.row.request.hostname,
+        },
+        {
+            field: "path",
+            headerName: "PATH",
+            width: 450,
+            valueGetter: (params) => params.row.request.path,
+        },
+        {
+            field: "statusCode",
+            headerName: "Status code",
+            width: 200,
+            align: "center",
+            valueGetter: (params) => params.row.response.statusCode + " OK",
+        },
+    ];
+
+    let rows = [];
+    for (let i = 0; i < rrPairs.length; i++) {
+        rows.push({ id: i + 1, ...rrPairs[i] });
+    }
 
     return (
-        <TableContainer component={Paper} className={classes.paper}>
-            <Table className={classes.table} size="small" stickyHeader>
-                <TableHead>
-                    <TableRow>
-                        <TableCell
-                            align="center"
-                            className={classes.headerCell}
-                        >
-                            #
-                        </TableCell>
-                        <TableCell className={classes.headerCell}>
-                            Method
-                        </TableCell>
-                        <TableCell className={classes.headerCell}>
-                            Host
-                        </TableCell>
-                        <TableCell className={classes.headerCell}>
-                            Path
-                        </TableCell>
-                        <TableCell className={classes.headerCell}>
-                            Status code
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rrPairs.map((rrPair, index) => {
-                        // if (index === 1) {
-                        //     console.log("Received", rrPair);
-                        // }
-                        const request = rrPair.request;
-                        const response = rrPair.response;
-                        if (!request || !response) {
-                            return null;
-                        }
-                        return (
-                            <TableRow key={index}>
-                                <TableCell
-                                    component="th"
-                                    scope="row"
-                                    align="center"
-                                    style={{
-                                        overflow: "hidden",
-                                        maxWidth: 5,
-                                    }}
-                                >
-                                    {index + 1}
-                                </TableCell>
-                                <TableCell>{request.method}</TableCell>
-                                <TableCell
-                                    style={{
-                                        whiteSpace: "nowrap",
-                                        overflow: "hidden",
-                                        maxWidth: 400,
-                                    }}
-                                >
-                                    {request.protocol +
-                                        "://" +
-                                        request.hostname}
-                                </TableCell>
-                                <TableCell
-                                    style={{
-                                        whiteSpace: "nowrap",
-                                        overflow: "hidden",
-                                        textOverflow: "ellipsis",
-                                        maxWidth: 400,
-                                    }}
-                                >
-                                    {request.path}
-                                </TableCell>
-                                <TableCell>{response.statusCode}</TableCell>
-                            </TableRow>
-                        );
-                    })}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <div style={{ height: 400, width: "100%" }}>
+            <span className={classes.grid}>
+                <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    disableColumnMenu
+                    sortModel={[
+                        {
+                            field: "id",
+                            sort: "desc",
+                        },
+                    ]}
+                    density="compact"
+                    loading={loading}
+                    hideFooterSelectedRowCount
+                />
+            </span>
+        </div>
     );
 }
 
 function Proxy(props) {
     const [rrPairs, setRRpairs] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const [alertMessage, setAlertMessage] = useState(null);
 
     useEffect(() => {
         (async function fetchPairs() {
+            setLoading(true);
             fetch("/api/get/RRpair/")
                 .then((res) => res.json())
                 .then((result) => {
@@ -130,7 +131,8 @@ function Proxy(props) {
                         setRRpairs(logs);
                     }
                 })
-                .catch((err) => console.log("err", err));
+                .catch((err) => console.log("err", err))
+                .finally(() => setLoading(false));
         })();
 
         const socket = socketIOClient(ENDPOINT, {
@@ -150,7 +152,7 @@ function Proxy(props) {
                     <Typography color="error">{alertMessage}</Typography>
                 </AlertMessage>
             ) : null}
-            <LogsTable rrPairs={rrPairs} />
+            <LogsTable rrPairs={rrPairs} loading={loading} />
             {rrPairs.length === 0 ? (
                 <AlertMessage type="info">
                     <Typography color="primary">

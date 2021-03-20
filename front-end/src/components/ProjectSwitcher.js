@@ -202,65 +202,72 @@ function ProjectSwitcher(props) {
                     <AddIcon style={{ marginRight: 15 }} />
                     Add and switch to project
                 </MenuItem>
-                {projects.map((project, index) => {
-                    // dont render the current project name
-                    if (
-                        currentProject !== null &&
-                        project._id === currentProject._id
-                    )
+                {projects &&
+                    projects.map((project, index) => {
+                        // dont render the current project name
+                        if (
+                            currentProject !== null &&
+                            project._id === currentProject._id
+                        )
+                            return (
+                                <MenuItem key={index} disabled>
+                                    <div
+                                        onClick={() =>
+                                            switchProject(
+                                                project._id,
+                                                project.name
+                                            )
+                                        }
+                                    >
+                                        {project.name} (Active)
+                                    </div>
+                                    <Tooltip title="Delete">
+                                        <IconButton
+                                            aria-label="delete"
+                                            style={{
+                                                position: "absolute",
+                                                right: 10,
+                                            }}
+                                            onClick={() =>
+                                                deleteProject(project._id)
+                                            }
+                                        >
+                                            <DeleteOutlineIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                </MenuItem>
+                            );
                         return (
-                            <MenuItem key={index} disabled>
-                                <div
-                                    onClick={() =>
-                                        switchProject(project._id, project.name)
-                                    }
-                                >
-                                    {project.name} (Active)
-                                </div>
-                                <Tooltip title="Delete">
-                                    <IconButton
-                                        aria-label="delete"
-                                        style={{
-                                            position: "absolute",
-                                            right: 10,
-                                        }}
+                            <div>
+                                <MenuItem key={index}>
+                                    <div
                                         onClick={() =>
-                                            deleteProject(project._id)
+                                            switchProject(
+                                                project._id,
+                                                project.name
+                                            )
                                         }
                                     >
-                                        <DeleteOutlineIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </MenuItem>
+                                        {project.name}
+                                    </div>
+                                    <Tooltip title="Delete">
+                                        <IconButton
+                                            aria-label="delete"
+                                            style={{
+                                                position: "absolute",
+                                                right: 10,
+                                            }}
+                                            onClick={() =>
+                                                deleteProject(project._id)
+                                            }
+                                        >
+                                            <DeleteOutlineIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                </MenuItem>
+                            </div>
                         );
-                    return (
-                        <div>
-                            <MenuItem key={index}>
-                                <div
-                                    onClick={() =>
-                                        switchProject(project._id, project.name)
-                                    }
-                                >
-                                    {project.name}
-                                </div>
-                                <Tooltip title="Delete">
-                                    <IconButton
-                                        aria-label="delete"
-                                        style={{
-                                            position: "absolute",
-                                            right: 10,
-                                        }}
-                                        onClick={() =>
-                                            deleteProject(project._id)
-                                        }
-                                    >
-                                        <DeleteOutlineIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </MenuItem>
-                        </div>
-                    );
-                })}
+                    })}
             </Menu>
 
             <Dialog
