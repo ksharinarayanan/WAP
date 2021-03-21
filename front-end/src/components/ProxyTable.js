@@ -76,6 +76,9 @@ export default class ProxyTable extends React.Component {
                                 fontWeight: 550,
                                 fontSize: 16,
                             }}
+                            onRowClick={(datakey) =>
+                                console.log("Data", datakey)
+                            }
                         >
                             <Column
                                 label="#"
