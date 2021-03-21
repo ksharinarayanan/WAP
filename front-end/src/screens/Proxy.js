@@ -3,9 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import socketIOClient from "socket.io-client";
 import AlertMessage from "../components/AlertMessage";
 import { Typography, Backdrop, CircularProgress } from "@material-ui/core";
-import { DataGrid } from "@material-ui/data-grid";
 import ProxyTable from "../components/ProxyTable";
-import NewProxyTable from "../components/NewProxyTable";
 const ENDPOINT = "http://127.0.0.1:4000";
 
 const useStyles = makeStyles({
@@ -40,73 +38,6 @@ const useStyles = makeStyles({
         },
     },
 });
-
-function LogsTable({ rrPairs, loading }) {
-    const classes = useStyles();
-
-    const columns = [
-        {
-            field: "id",
-            headerName: "ID",
-            align: "center",
-            width: 80,
-        },
-        {
-            field: "method",
-            headerName: "METHOD",
-            align: "center",
-            width: 120,
-            valueGetter: (params) => {
-                return params.row.request.method;
-            },
-        },
-        {
-            field: "host",
-            headerName: "HOST",
-            width: 320,
-            valueGetter: (params) => params.row.request.hostname,
-        },
-        {
-            field: "path",
-            headerName: "PATH",
-            width: 450,
-            valueGetter: (params) => params.row.request.path,
-        },
-        {
-            field: "statusCode",
-            headerName: "Status code",
-            width: 200,
-            align: "center",
-            valueGetter: (params) => params.row.response.statusCode + " OK",
-        },
-    ];
-
-    let rows = [];
-    for (let i = 0; i < rrPairs.length; i++) {
-        rows.push({ id: i + 1, ...rrPairs[i] });
-    }
-
-    return (
-        <div style={{ height: 400, width: "100%" }}>
-            <span className={classes.grid}>
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    disableColumnMenu
-                    sortModel={[
-                        {
-                            field: "id",
-                            sort: "desc",
-                        },
-                    ]}
-                    density="compact"
-                    loading={loading}
-                    hideFooterSelectedRowCount
-                />
-            </span>
-        </div>
-    );
-}
 
 function Proxy(props) {
     const classes = useStyles();
@@ -162,7 +93,7 @@ function Proxy(props) {
             ) : null}
             {/* <LogsTable rrPairs={rrPairs} loading={loading} /> */}
             {/* <ProxyTable rrPairs={rrPairs} /> */}
-            <NewProxyTable list={rrPairs} />
+            <ProxyTable list={rrPairs} />
             {rrPairs.length === 0 ? (
                 <AlertMessage type="info">
                     <Typography color="primary">
