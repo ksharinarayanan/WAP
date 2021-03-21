@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import socketIOClient from "socket.io-client";
 import AlertMessage from "../components/AlertMessage";
-import { Typography } from "@material-ui/core";
+import { Typography, Backdrop, CircularProgress } from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
 import ProxyTable from "../components/ProxyTable";
+import NewProxyTable from "../components/NewProxyTable";
 const ENDPOINT = "http://127.0.0.1:4000";
 
 const useStyles = makeStyles({
+    backdrop: {
+        color: "#fff",
+    },
     table: {
         minWidth: 650,
     },
@@ -105,6 +109,7 @@ function LogsTable({ rrPairs, loading }) {
 }
 
 function Proxy(props) {
+    const classes = useStyles();
     const [rrPairs, setRRpairs] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -140,6 +145,14 @@ function Proxy(props) {
         return () => socket.disconnect();
     }, []);
 
+    if (loading) {
+        return (
+            <Backdrop className={classes.backdrop} open={loading}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
+        );
+    }
+
     return (
         <div>
             {alertMessage ? (
@@ -148,7 +161,8 @@ function Proxy(props) {
                 </AlertMessage>
             ) : null}
             {/* <LogsTable rrPairs={rrPairs} loading={loading} /> */}
-            <ProxyTable rrPairs={rrPairs} />
+            {/* <ProxyTable rrPairs={rrPairs} /> */}
+            <NewProxyTable list={rrPairs} />
             {rrPairs.length === 0 ? (
                 <AlertMessage type="info">
                     <Typography color="primary">

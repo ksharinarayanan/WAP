@@ -4,7 +4,8 @@ import clsx from "clsx";
 import { withStyles } from "@material-ui/core/styles";
 import TableCell from "@material-ui/core/TableCell";
 import Paper from "@material-ui/core/Paper";
-import { AutoSizer, Column, Table } from "react-virtualized";
+import { AutoSizer, Column, Table, SortDirection } from "react-virtualized";
+import _ from "lodash";
 
 const styles = (theme) => ({
     flexContainer: {
@@ -43,6 +44,35 @@ class MuiVirtualizedTable extends React.PureComponent {
         rowHeight: 48,
     };
 
+    constructor(props) {
+        super(props);
+
+        let list = props.list;
+        console.log("First", list);
+        const sortBy = "hostname";
+        const sortDirection = SortDirection.DESC;
+        const sortedList = this._sortList({ sortBy, sortDirection, list });
+
+        this.state = {
+            sortBy,
+            sortDirection,
+            sortedList,
+        };
+    }
+
+    _sortList = ({ sortBy, sortDirection, list }) => {
+        let newList = _.sortBy(list, [sortBy]);
+        if (sortDirection === SortDirection.DESC) {
+            newList.reverse();
+        }
+        return newList;
+    };
+
+    _sort = ({ sortBy, sortDirection }) => {
+        const sortedList = this._sortList({ sortBy, sortDirection });
+        this.setState({ sortBy, sortDirection, sortedList });
+    };
+
     getRowClassName = ({ index }) => {
         const { classes, onRowClick } = this.props;
 
@@ -56,7 +86,7 @@ class MuiVirtualizedTable extends React.PureComponent {
         let text;
         switch (key) {
             case "index":
-                return datakey["rowIndex"];
+                return datakey["rowIndex"] + 1;
             case "method":
                 text = datakey["rowData"].request.method;
                 break;
@@ -122,8 +152,9 @@ class MuiVirtualizedTable extends React.PureComponent {
                         className={classes.table}
                         {...tableProps}
                         rowClassName={this.getRowClassName}
-                        sortBy="index"
-                        sortDirection="DESC"
+                        sort={this._sort}
+                        sortBy={this.state.sortBy}
+                        sortDirection={this.state.sortDirection}
                     >
                         {columns.map(({ dataKey, ...other }, index) => {
                             const justify =
@@ -179,6 +210,7 @@ MuiVirtualizedTable.propTypes = {
     headerHeight: PropTypes.number,
     onRowClick: PropTypes.func,
     rowHeight: PropTypes.number,
+    list: PropTypes.array,
 };
 
 const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
@@ -191,6 +223,7 @@ export default function ProxyTable({ rrPairs }) {
     return (
         <Paper style={{ height: 400, width: 1060 }}>
             <VirtualizedTable
+                list={rrPairs}
                 rowCount={rrPairs.length}
                 rowGetter={({ index }) => rrPairs[index]}
                 columns={[
