@@ -91,8 +91,6 @@ function Proxy(props) {
                     <Typography color="error">{alertMessage}</Typography>
                 </AlertMessage>
             ) : null}
-            {/* <LogsTable rrPairs={rrPairs} loading={loading} /> */}
-            {/* <ProxyTable rrPairs={rrPairs} /> */}
             <ProxyTable list={rrPairs} />
             {rrPairs.length === 0 ? (
                 <AlertMessage type="info">

@@ -2,10 +2,7 @@ import React from "react";
 import { Column, Table, SortDirection, AutoSizer } from "react-virtualized";
 import "react-virtualized/styles.css";
 import _ from "lodash";
-// TODO: npm uninstall
-
 import "@fontsource/inter";
-import { CascadiaCode, Inter } from "./Fonts";
 
 export default class ProxyTable extends React.Component {
     constructor(props) {
