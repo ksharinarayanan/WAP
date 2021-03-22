@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "server": "nodemon index.js",
-    "front-end": "npm run dev",
+    "front-end": "npm run dev --prefix front-end",
     "dev": "concurrently \"npm run server\" \"npm run front-end\"",
     "client-install": "npm install --prefix front-end"
   },
@@ -13,7 +13,6 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
-    "concurrently": "^6.0.0",
     "cookie-parser": "^1.4.5",
     "create-next-app": "^10.0.9",
     "dotenv": "^8.2.0",
@@ -23,6 +22,7 @@
     "socket.io": "^4.0.0"
   },
   "devDependencies": {
+    "concurrently": "^6.0.0",
     "nodemon": "^2.0.7"
   }
 }
