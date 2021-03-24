@@ -166,7 +166,7 @@ export default function Navigator() {
                     [classes.appBarShift]: open,
                 })}
             >
-                <Toolbar>
+                <Toolbar variant="regular">
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
@@ -230,7 +230,10 @@ export default function Navigator() {
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.toolbar} />
-                {currentPage}
+                <div style={{ display: currentIndex === 1 ? "block" : "none" }}>
+                    <Proxy />
+                </div>
+                {currentIndex === 1 ? null : currentPage}
             </main>
         </div>
     );

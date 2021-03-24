@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import socketIOClient from "socket.io-client";
 import AlertMessage from "../components/AlertMessage";
 import { Typography, Backdrop, CircularProgress } from "@material-ui/core";
-import ProxyTable from "../components/ProxyTable";
+import ProxyTable from "../components/proxy/ProxyTable";
 const ENDPOINT = "http://127.0.0.1:4000";
 
 const useStyles = makeStyles({
@@ -91,7 +91,6 @@ function Proxy(props) {
                     <Typography color="error">{alertMessage}</Typography>
                 </AlertMessage>
             ) : null}
-            <ProxyTable list={rrPairs} />
             {rrPairs.length === 0 ? (
                 <AlertMessage type="info">
                     <Typography color="primary">
@@ -99,6 +98,7 @@ function Proxy(props) {
                     </Typography>
                 </AlertMessage>
             ) : null}
+            <ProxyTable list={rrPairs} />
         </div>
     );
 }

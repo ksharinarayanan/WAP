@@ -5,7 +5,8 @@ import "@fontsource/inter";
 const theme = createMuiTheme({
     palette: {
         primary: {
-            main: "#7b53c1",
+            // main: "#7b53c1",
+            main: "#0aa3c4",
         },
     },
     typography: {
