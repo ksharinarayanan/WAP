@@ -11,6 +11,7 @@ const Project = require("../models/Project");
 
 // all apis related to project management
 const projectAPI = require("./api/project");
+const toolsAPI = require("./api/tools");
 
 const projectSelected = (req) => {
     if (req.cookies === undefined || req.cookies["projectID"] === undefined) {
@@ -20,6 +21,7 @@ const projectSelected = (req) => {
 };
 
 router.use("/projects", projectAPI);
+router.use("/tools", toolsAPI);
 
 // add request-response pair to a particular project!
 router.post("/add/RRpair/", (req, res) => {
@@ -32,6 +34,8 @@ router.post("/add/RRpair/", (req, res) => {
     if (req.body.request.hostname === "localhost") {
         return;
     }
+
+    console.log("Req", req.body.request);
 
     const projectID = req.cookies["projectID"];
 
@@ -48,9 +52,10 @@ router.post("/add/RRpair/", (req, res) => {
         .then((item) => {
             res.status(200).json({ message: "Added!" });
         })
-        .catch((err) =>
-            res.status(500).json({ message: "Failed to add the RR pair!" })
-        );
+        .catch((err) => {
+            console.log("Error while adding rr pair", err);
+            res.status(500).json({ message: "Failed to add the RR pair!" });
+        });
 });
 
 // fetch all the request-response pair for a particular project!

@@ -54,6 +54,7 @@ module.exports = {
             ...requestDetail.requestOptions,
             protocol: requestDetail.protocol,
             url: requestDetail.url,
+            body: requestDetail.requestData.toString(),
         };
 
         // if (checkOccurence(newResponse.header["Content-Type"], dont_intercept)) {

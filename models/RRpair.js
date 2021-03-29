@@ -2,43 +2,46 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const RRpairSchema = new Schema({
-  request: {
-    hostname: {
-      type: String,
+    request: {
+        hostname: {
+            type: String,
+        },
+        port: {
+            type: Number,
+        },
+        path: {
+            type: String,
+        },
+        headers: {
+            type: Map,
+            of: String,
+        },
+        body: {
+            type: String,
+        },
+        method: {
+            type: String,
+        },
+        protocol: {
+            type: String,
+        },
     },
-    port: {
-      type: Number,
-    },
-    path: {
-      type: String,
-    },
-    headers: {
-      type: Map,
-      of: String,
-    },
-    body: {
-      type: String,
-    },
-    method: {
-      type: String
-    },
-    protocol: {
-      type: String
-    }
-  },
 
-  response: {
-    statusCode: {
-      type: Number,
+    response: {
+        statusCode: {
+            type: Number,
+        },
+        hostname: {
+            type: String,
+        },
+        body: {
+            type: String,
+        },
+        header: {
+            type: Map,
+            of: String,
+        },
     },
-    hostname: {
-      type: String,
-    },
-    header: {
-      type: Map,
-      of: String,
-    },
-  },
 });
 
 module.exports = RRpair = mongoose.model("RRpair", RRpairSchema);

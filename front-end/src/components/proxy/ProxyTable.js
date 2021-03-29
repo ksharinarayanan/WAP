@@ -3,7 +3,6 @@ import { Column, Table, SortDirection, AutoSizer } from "react-virtualized";
 import "react-virtualized/styles.css";
 import _ from "lodash";
 import "@fontsource/inter";
-import LogViewer from "./LogViewer";
 
 export default class ProxyTable extends React.Component {
     constructor(props) {
@@ -15,8 +14,6 @@ export default class ProxyTable extends React.Component {
         const sortDirection = SortDirection.DESC;
         const sortedList = this._sortList({ sortBy, sortDirection, list });
         const count = 1;
-        const currentModalContent = null;
-        const modalOpen = false;
 
         this.state = {
             sortBy,
@@ -24,8 +21,6 @@ export default class ProxyTable extends React.Component {
             sortedList,
             list,
             count,
-            currentModalContent,
-            modalOpen,
         };
     }
 
@@ -35,6 +30,11 @@ export default class ProxyTable extends React.Component {
         }
         return list;
     };
+
+    // setNo =(num)=>{
+    //     //p(9);
+    //     this.props.setFocusNo(9);
+    // }
 
     componentDidUpdate(previousProps, previousState) {
         if (previousProps.list.length !== this.props.list.length) {
@@ -64,7 +64,7 @@ export default class ProxyTable extends React.Component {
     render() {
         return (
             <div>
-                <div style={{ height: "30vh" }}>
+                <div style={{ height: "35vh", marginBottom: "5vh" }}>
                     <AutoSizer>
                         {({ height, width }) => (
                             <Table
@@ -91,12 +91,9 @@ export default class ProxyTable extends React.Component {
                                 }}
                                 onRowClick={
                                     (datakey) => {
-                                        this.setState({
-                                            ...this.state,
-                                            currentModalContent:
-                                                datakey.rowData,
-                                            modalOpen: true,
-                                        });
+                                        this.props.setFocusNo(
+                                            datakey.rowData.index - 1
+                                        );
                                     }
                                     // console.log("Data", datakey)
                                 }
@@ -151,7 +148,6 @@ export default class ProxyTable extends React.Component {
                         )}
                     </AutoSizer>
                 </div>
-                <LogViewer />
             </div>
         );
     }

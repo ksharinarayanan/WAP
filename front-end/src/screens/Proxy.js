@@ -4,6 +4,8 @@ import socketIOClient from "socket.io-client";
 import AlertMessage from "../components/AlertMessage";
 import { Typography, Backdrop, CircularProgress } from "@material-ui/core";
 import ProxyTable from "../components/proxy/ProxyTable";
+import Container from "@material-ui/core/Container";
+import LogViewer from "../components/proxy/LogViewer";
 const ENDPOINT = "http://127.0.0.1:4000";
 
 const useStyles = makeStyles({
@@ -19,6 +21,12 @@ const useStyles = makeStyles({
     headerCell: {
         backgroundColor: "#000",
         color: "#fff",
+    },
+    row: {
+        display: "flex",
+    },
+    column: {
+        flex: 1,
     },
     grid: {
         "& .MuiDataGrid-colCellWrapper": {
@@ -43,8 +51,13 @@ function Proxy(props) {
     const classes = useStyles();
     const [rrPairs, setRRpairs] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [focussedrrPairNo, setFocussedrrPairNo] = useState(null);
 
     const [alertMessage, setAlertMessage] = useState(null);
+
+    const setFocusNo = (no) => {
+        setFocussedrrPairNo(no);
+    };
 
     useEffect(() => {
         (async function fetchPairs() {
@@ -98,7 +111,16 @@ function Proxy(props) {
                     </Typography>
                 </AlertMessage>
             ) : null}
-            <ProxyTable list={rrPairs} />
+            <ProxyTable list={rrPairs} setFocusNo={setFocusNo} />
+            <Container className={classes.row}>
+                {focussedrrPairNo != undefined &&
+                rrPairs[focussedrrPairNo] != undefined ? (
+                    <LogViewer
+                        request={rrPairs[focussedrrPairNo].request}
+                        response={rrPairs[focussedrrPairNo].response}
+                    />
+                ) : null}
+            </Container>
         </div>
     );
 }

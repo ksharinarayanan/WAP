@@ -31,7 +31,9 @@ const port = process.env.PORT || 4000;
 
 const server = http.createServer(app);
 
-server.listen(port, () => console.log(`Server started at port ${port}`));
+server.listen(port, () =>
+    console.log(`Backend node JS server started at port ${port}`)
+);
 
 // Event emitter
 const eventEmitter = new Emitter();

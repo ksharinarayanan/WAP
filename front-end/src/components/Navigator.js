@@ -19,6 +19,7 @@ import DashboardIcon from "@material-ui/icons/Dashboard";
 import TimelineIcon from "@material-ui/icons/Timeline";
 import RepeatIcon from "@material-ui/icons/Repeat";
 import FastForwardIcon from "@material-ui/icons/FastForward";
+import BuildIcon from "@material-ui/icons/Build";
 
 // custom screens
 
@@ -27,12 +28,14 @@ import Proxy from "../screens/Proxy";
 import Resender from "../screens/Resender";
 import Fuzzer from "../screens/Fuzzer";
 import ProjectSwitcher from "./ProjectSwitcher";
+import Tools from "../screens/Tools";
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
     root: {
         display: "flex",
+        backgroundColor: "#fff",
     },
     appBar: {
         zIndex: theme.zIndex.drawer + 1,
@@ -101,7 +104,6 @@ export default function Navigator() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
 
-    const [currentPage, setCurrentPage] = React.useState(<Proxy />);
     const [currentIndex, setCurrentIndex] = React.useState(1);
 
     const handleDrawerOpen = () => {
@@ -122,21 +124,8 @@ export default function Navigator() {
                 return <RepeatIcon />;
             case 3:
                 return <FastForwardIcon />;
-            default:
-                return null;
-        }
-    };
-
-    const getComponent = (index) => {
-        switch (index) {
-            case 0:
-                return <Dashboard />;
-            case 1:
-                return <Proxy />;
-            case 2:
-                return <Resender />;
-            case 3:
-                return <Fuzzer />;
+            case 4:
+                return <BuildIcon />;
             default:
                 return null;
         }
@@ -152,9 +141,18 @@ export default function Navigator() {
                 return "Resender";
             case 3:
                 return "Fuzzer";
+            case 4:
+                return "Tools";
             default:
                 return null;
         }
+    };
+
+    const getDisplay = (index) => {
+        if (currentIndex === index) {
+            return "block";
+        }
+        return "none";
     };
 
     return (
@@ -210,13 +208,12 @@ export default function Navigator() {
                 </div>
                 <Divider />
                 <List>
-                    {["Dashboard", "Proxy", "Resender", "Fuzzer"].map(
+                    {["Dashboard", "Proxy", "Resender", "Fuzzer", "Tools"].map(
                         (text, index) => (
                             <ListItem
                                 button
                                 key={text}
                                 onClick={() => {
-                                    setCurrentPage(getComponent(index));
                                     setCurrentIndex(index);
                                 }}
                             >
@@ -230,10 +227,22 @@ export default function Navigator() {
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.toolbar} />
-                <div style={{ display: currentIndex === 1 ? "block" : "none" }}>
+
+                <div style={{ display: getDisplay(0) }}>
+                    <Dashboard />
+                </div>
+                <div style={{ display: getDisplay(1) }}>
                     <Proxy />
                 </div>
-                {currentIndex === 1 ? null : currentPage}
+                <div style={{ display: getDisplay(2) }}>
+                    <Resender />
+                </div>
+                <div style={{ display: getDisplay(3) }}>
+                    <Fuzzer />
+                </div>
+                <div style={{ display: getDisplay(4) }}>
+                    <Tools />
+                </div>
             </main>
         </div>
     );

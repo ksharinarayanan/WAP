@@ -1,9 +1,11 @@
 import CustomButton from "./CustomButton";
 
-export default {
+const config = {
     title: "Button",
     component: CustomButton,
 };
+
+export default config;
 
 const Template = (args) => <CustomButton {...args} />;
 
