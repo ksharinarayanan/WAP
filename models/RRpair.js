@@ -41,6 +41,7 @@ const RRpairSchema = new Schema({
             type: Map,
             of: String,
         },
+        setCookie: [String]
     },
 });
 
