@@ -65,6 +65,7 @@ function Modal({ visible, closeModal }) {
                     msg: "Tool added!",
                 };
                 setToast(msg);
+                window.location.reload();
             })
             .catch((err) => {
                 const msg = {
