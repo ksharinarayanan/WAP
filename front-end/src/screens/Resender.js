@@ -269,7 +269,6 @@ function Resender(props) {
    Accept-Language : en-US,en;q=0.5
    Accept-Encoding : gzip, deflate, br
    Connection : keep-alive
-   Cookie : ANID=AHWqTUlgUx92heCjI7sBIEVfI7qnJM1eoDfcEUvAeP2qd6os9_e-ZrfeRwIA4i5S; 1P_JAR=2021-03-29-16; NID=211=COT-4ASkBcRL4HKsTF6EytIyrrlKuRs6Jrvoity_cMwveC1dXd2SEElrPwyHEL0nRLl3kR0CbWxmtkyCneCZgEWgClQSMi07Z-cYIk3tuVQcd6VHMHIzstAm2wdHYdoQ8_aIi72DuK8yKq1ciSMoboKSwEfxd0gWUjXf0xglXF0
    Upgrade-Insecure-Requests : 1
    Cache-Control : max-age=0"
                             onChange={(e) => setReq(e.target.value)}
