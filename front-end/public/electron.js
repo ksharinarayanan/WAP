@@ -22,9 +22,9 @@ function createWindow() {
     );
 
     // Open the DevTools.
-    if (isDev) {
-        win.webContents.openDevTools({ mode: "detach" });
-    }
+    // if (isDev) {
+    //     win.webContents.openDevTools({ mode: "detach" });
+    // }
 }
 
 // This method will be called when Electron has finished
