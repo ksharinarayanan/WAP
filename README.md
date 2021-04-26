@@ -6,7 +6,9 @@ Open source alternative to burpsuite written using React JS and node JS!
 
 **Screenshots**
 
-<img src="https://github.com/ksharinarayanan/SourceWolf/blob/master/images/logo.png" width="130px" height="130px">
+<img src="https://github.com/ksharinarayanan/WAP/blob/master/front-end/screenshots/WAP - Proxy.png" width="130px" height="130px">
+
+<img src="https://github.com/ksharinarayanan/WAP/blob/master/front-end/screenshots/WAP - Dashboard.png" width="130px" height="130px">
 
 **Installation**
 
