@@ -46,4 +46,5 @@ Currently, we don't have a one click installation setup. Though setting up is re
 
 
 
-The project is still in it's nascent state, and contributions of any form would be really helpful :happy:
+**The project is still in it's nascent state, and contributions of any form would be really helpful :happy:**
+
