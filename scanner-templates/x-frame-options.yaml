@@ -1,7 +1,9 @@
 id: x-frame-options
 severity: medium
 description: A lame description to be added in later on!
-type: header-presence
+type: header
+presence: false
 header-key: X-Frame-Options
 header-value: Allow
 location: response
+uniqueTo: host

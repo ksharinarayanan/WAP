@@ -1,4 +1,4 @@
-// intended to add req-res pair to DB
+// purpose: to add req-res pair to DB
 
 const express = require("express");
 const router = express.Router();
@@ -16,6 +16,8 @@ const Project = require("../models/Project");
 const projectAPI = require("./api/project");
 const toolsAPI = require("./api/tools");
 
+const scan = require("./scan");
+
 const projectSelected = (req) => {
     if (req.cookies === undefined || req.cookies["projectID"] === undefined) {
         return false;
@@ -28,7 +30,13 @@ router.use("/tools", toolsAPI);
 
 const template_ids = ["scanner-templates/x-frame-options.yaml"];
 
+const issues = {
+    "x-frame-options": [],
+};
+
 const scanner = (request, response) => {
+    // console.log("Response", response.headers["X-Frame-Options"]);
+
     try {
         // read the scanner template
 
@@ -36,11 +44,23 @@ const scanner = (request, response) => {
 
         for (var i = 0; i < template_ids.length; i++) {
             let fileContents = fs.readFileSync(template_ids[i], "utf8");
-            let data = yaml.loadAll(fileContents);
-            console.log("Data", data);
+            let template = yaml.loadAll(fileContents);
+            const issue = scan(request, response, template);
+
+            if (issue !== undefined) {
+                if (template.uniqueTo === host) {
+                    if (issues[`${issue}`].length > 0) {
+                        // issue duplicate
+                        return;
+                    }
+                    // add to object x-frame-options
+                }
+            }
+
+            // console.log("Data", data);
         }
     } catch (e) {
-        console.log("Error while reading template files!", e);
+        console.log("Error while reading template files");
     }
 };
 
@@ -83,7 +103,7 @@ router.post("/add/RRpair/", (req, res) => {
             res.status(200).json({ message: "Added!" });
         })
         .catch((err) => {
-            console.log("Error while adding rr pair!!!!!!!!!!");
+            console.log("Error while adding rr pair!", err);
             res.status(500).json({ message: "Failed to add the RR pair!" });
         });
 });
