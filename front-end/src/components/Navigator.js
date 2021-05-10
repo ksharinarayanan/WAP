@@ -104,7 +104,7 @@ export default function Navigator() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
 
-    const [currentIndex, setCurrentIndex] = React.useState(0);
+    const [currentIndex, setCurrentIndex] = React.useState(1);
 
     const handleDrawerOpen = () => {
         setOpen(true);

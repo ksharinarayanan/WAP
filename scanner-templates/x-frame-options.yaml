@@ -1,4 +1,5 @@
 id: x-frame-options
+title: "Click jacking"
 severity: medium
 description: A lame description to be added in later on!
 type: header

@@ -34,9 +34,16 @@ const issues = {
     "x-frame-options": [],
 };
 
-const scanner = (request, response) => {
-    // console.log("Response", response.headers["X-Frame-Options"]);
+const hostPresent = (array, host) => {
+    for (let i = 0; i < array.length; i++) {
+        if (array[i].request.hostname === host) {
+            return true;
+        }
+    }
+    return false;
+};
 
+const scanner = (request, response, eventEmitter) => {
     try {
         // read the scanner template
 
@@ -45,19 +52,31 @@ const scanner = (request, response) => {
         for (var i = 0; i < template_ids.length; i++) {
             let fileContents = fs.readFileSync(template_ids[i], "utf8");
             let template = yaml.loadAll(fileContents);
+
+            template = template[0];
+
             const issue = scan(request, response, template);
 
             if (issue !== undefined) {
-                if (template.uniqueTo === host) {
-                    if (issues[`${issue}`].length > 0) {
+                if (template.uniqueTo === "host") {
+                    if (hostPresent(issues[`${issue}`], request.hostname)) {
                         // issue duplicate
+                        console.log("Duplicate issue!");
                         return;
                     }
                     // add to object x-frame-options
                 }
-            }
 
-            // console.log("Data", data);
+                const detailedIssue = {
+                    request: request,
+                    response: response,
+                    template: template,
+                };
+
+                issues[`${issue}`].push(detailedIssue);
+                console.log("New issue");
+                eventEmitter.emit("newIssue", issues);
+            }
         }
     } catch (e) {
         console.log("Error while reading template files");
@@ -91,7 +110,7 @@ router.post("/add/RRpair/", (req, res) => {
     const eventEmitter = req.app.get("eventEmitter");
     eventEmitter.emit("newRRpair", req.body);
 
-    scanner(req.body.response, req.body.request);
+    scanner(req.body.response, req.body.request, eventEmitter);
 
     Project.updateOne(
         { _id: projectID },

@@ -1,6 +1,4 @@
 module.exports = (request, response, template) => {
-    template = template[0];
-
     const header = (presence, location) => {
         const headers = response.headers;
         const headerKey = template["header-key"].toLowerCase();
@@ -18,9 +16,11 @@ module.exports = (request, response, template) => {
                 return "x-frame-options";
             }
         }
+
+        return undefined;
     };
 
     if (template.type === "header") {
-        header(template.presence, template.location);
+        return header(template.presence, template.location);
     }
 };
