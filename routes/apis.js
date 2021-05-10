@@ -15,6 +15,7 @@ const Project = require("../models/Project");
 // all apis related to project management
 const projectAPI = require("./api/project");
 const toolsAPI = require("./api/tools");
+const sourcewolfAPI = require("./api/sourcewolf");
 
 const scan = require("./scan");
 
@@ -27,6 +28,7 @@ const projectSelected = (req) => {
 
 router.use("/projects", projectAPI);
 router.use("/tools", toolsAPI);
+router.use("/sourcewolf", sourcewolfAPI);
 
 const template_ids = ["scanner-templates/x-frame-options.yaml"];
 

@@ -46,7 +46,7 @@ function Tools(props) {
                     command: command,
                 })
                 .then((res) => {
-                    console.log("Output - ", res.data);
+                    // console.log("Output - ", res.data);
                     alert("Output in the console!");
                 })
                 .catch((err) => {
