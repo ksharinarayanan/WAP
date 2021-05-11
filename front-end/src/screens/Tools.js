@@ -11,11 +11,17 @@ import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import "@fontsource/inter";
 import axios from "axios";
 import Toast from "../components/Toast";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import TextField from "@material-ui/core/TextField";
 
 function Tools(props) {
     const [open, setOpen] = useState(false);
     const [tools, setTools] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [content, setContent] = useState("");
+    const [selectedTool, setSelectedTool] = useState(null);
+    const [argument, setArgument] = useState("");
 
     const [toast, setToast] = useState(null);
 
@@ -35,44 +41,30 @@ function Tools(props) {
         setOpen(false);
     };
 
-    const ExecuteButton = ({ tool }) => {
-        const executeCommand = () => {
-            const command = tool.command;
+    const ExecuteCommand = () => {
+        console.log(selectedTool + " " + argument);
 
-            setLoading(true);
+        const command = selectedTool + " " + argument;
 
-            axios
-                .post("/api/tools/execute/", {
-                    command: command,
-                })
-                .then((res) => {
-                    // console.log("Output - ", res.data);
-                    alert("Output in the console!");
-                })
-                .catch((err) => {
-                    console.log("Error", err);
-                    alert("Error occurred!");
-                })
-                .finally(() => {
-                    setLoading(false);
-                });
-        };
+        setLoading(true);
 
-        return (
-            <Button
-                variant="primary"
-                style={{
-                    fontFamily: "inter",
-                    fontSize: 19,
-                    backgroundColor: "white",
-                    margin: 10,
-                    left: 20,
-                }}
-                onClick={executeCommand}
-            >
-                Execute command
-            </Button>
-        );
+        axios
+            .post("/api/tools/execute/", {
+                command: command,
+            })
+            .then((res) => {
+                console.log("Output - ", res.data);
+
+                setContent(res.data);
+                alert("Output in the console!");
+            })
+            .catch((err) => {
+                console.log("Error", err);
+                alert("Error occurred!");
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     };
 
     const deleteTool = (tool) => {
@@ -117,6 +109,16 @@ function Tools(props) {
         })();
     }, []);
 
+    let toolsList =
+        tools.length > 0 &&
+        tools.map((item, i) => {
+            return (
+                <MenuItem key={i} value={item.command}>
+                    {item.name}
+                </MenuItem>
+            );
+        });
+
     if (loading) {
         return (
             <Backdrop open={loading}>
@@ -124,53 +126,89 @@ function Tools(props) {
             </Backdrop>
         );
     }
+    const handleChange = (event) => {
+        setSelectedTool(event.target.value);
+    };
+
+    const handleTextChange = (event) => {
+        setArgument(event.target.value);
+    };
 
     return (
         <div>
             <ModalWithButton buttonContent="Add tool" />
-            <Button variant="primary" onClick={handleOpen}>
-                View tools!
-            </Button>
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="simple-modal-title"
-                aria-describedby="simple-modal-description"
+            <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                onChange={handleChange}
             >
-                <div
-                    style={{
-                        width: "45vw",
-                        position: "absolute",
-                        top: "35vh",
-                        left: "35vw",
-                        backgroundColor: "#333",
-                        color: "#fff",
-                        fontFamily: "inter",
-                        fontSize: 21,
-                    }}
-                >
-                    {tools.map((tool, key) => {
-                        return (
-                            <div key={key} style={{ margin: 10, flex: 1 }}>
-                                {tool.name} -
-                                <ExecuteButton tool={tool} />{" "}
-                                <IconButton>
-                                    <DeleteOutlineIcon
-                                        style={{
-                                            marginLeft: 30,
-                                            color: "#fff",
-                                        }}
-                                        onClick={() => {
-                                            deleteTool(tool);
-                                        }}
-                                    />
-                                </IconButton>
-                                <br />
-                            </div>
-                        );
-                    })}
+                {toolsList}
+            </Select>
+            <br></br>
+            <TextField
+                id="standard-basic"
+                label="argument"
+                value={argument}
+                onChange={handleTextChange}
+            />
+            {/* <Button variant="primary" onClick={handleOpen}>
+                View tools!
+            </Button> */}
+            <br></br>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={ExecuteCommand}
+            >
+                Execute
+            </Button>
+            <br></br>
+            <div>
+                {content.split("\n").map((i, key) => {
+                    return <p key={key}>{i}</p>;
+                })}
+            </div>
+
+            {/* <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+        >
+          <div
+            style={{
+              width: '45vw',
+              position: 'absolute',
+              top: '35vh',
+              left: '35vw',
+              backgroundColor: '#333',
+              color: '#fff',
+              fontFamily: 'inter',
+              fontSize: 21,
+            }}
+          >
+            {tools.map((tool, key) => {
+              return (
+                <div key={key} style={{ margin: 10, flex: 1 }}>
+                  {tool.name} -
+                  <ExecuteButton tool={tool} />{' '}
+                  <IconButton>
+                    <DeleteOutlineIcon
+                      style={{
+                        marginLeft: 30,
+                        color: '#fff',
+                      }}
+                      onClick={() => {
+                        deleteTool(tool);
+                      }}
+                    />
+                  </IconButton>
+                  <br />
                 </div>
-            </Modal>
+              );
+            })}
+          </div>
+        </Modal> */}
             <Toast
                 open={toast != null}
                 toggleToast={toggleToast}

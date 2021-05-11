@@ -42,7 +42,7 @@ router.post("/execute/", (req, res) => {
 
     async function ls() {
         let { stdout, stderr } = await exec(command);
-        stdout = stdout.split("\n");
+        //stdout = stdout.split('\n');
 
         res.status(200).send(stdout);
     }
