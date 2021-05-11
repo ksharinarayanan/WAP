@@ -46,4 +46,7 @@ io.on("connection", (socket) => {
     eventEmitter.on("newRRpair", (data) => {
         socket.emit("newRRpair", data);
     });
+    eventEmitter.on("newIssue", (data) => {
+        socket.emit("newIssue", data);
+    });
 });

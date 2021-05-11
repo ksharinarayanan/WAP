@@ -1,16 +1,37 @@
 // This is the dashboard page: Manage projects here!
 
-import { Grid, GridList, GridListTile, ListSubheader } from "@material-ui/core";
+import {
+    Grid,
+    GridList,
+    GridListTile,
+    ListSubheader,
+    Backdrop,
+    CircularProgress,
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import "@fontsource/inter";
 import InfoIcon from "@material-ui/icons/Info";
 import WarningIcon from "@material-ui/icons/Warning";
 import AcUnitOutlinedIcon from "@material-ui/icons/AcUnitOutlined";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
+import socketIOClient from "socket.io-client";
+import LogViewer from "../components/proxy/LogViewer";
+const ENDPOINT = "http://127.0.0.1:4000";
+
+const useStyles = makeStyles({
+    backdrop: {
+        color: "#fff",
+    },
+});
 
 function Dashboard(props) {
     const [issues, setIssues] = useState([]);
     const [selectedIssue, setSelectedIssue] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [rrPair, setRRpair] = useState(null);
+
+    const classes = useStyles();
 
     const IconMapper = ({ severity }) => {
         if (severity === "informational") {
@@ -28,42 +49,41 @@ function Dashboard(props) {
         }
     };
 
-    useEffect(() => {
-        // TODO: fetch data and set issues state
+    const RenderRRpair = () => {
+        if (rrPair === null) {
+            return "Select an issue to see the corresponding RR pair";
+        }
+        return (
+            <LogViewer request={rrPair.request} response={rrPair.response} />
+        );
+    };
 
-        setIssues([
-            {
-                title: "Missing X-Frame-Options",
-                severity: "low",
-                description:
-                    "Since X-Frame-Options are missing, the page can be captured into an iFrame and is vulnerable to <a href='#'>clickjacking</a>",
-            },
-            {
-                title: "HTTP connections",
-                severity: "informational",
-                description:
-                    "Since the website uses unencrypted HTTP connections instead of HTTPS, it is possible for a MITM attack",
-            },
-            {
-                title: "Third issue",
-                severity: "medium",
-                description:
-                    "I don't know what to write here, this will become my third issue that has been detected by the scanner",
-            },
-            {
-                title: "SPF records missing",
-                severity: "high",
-                description:
-                    "Don't take this seriously, these are mock issues. Never report this to bug bounty programs!",
-            },
-            {
-                title: "Fifth issue",
-                severity: "medium",
-                description:
-                    "Arbitrary HTML can also be inserted into this, making it possible to provide reference links like <a href='#'>these</a> in the issue description",
-            },
-        ]);
+    useEffect(() => {
+        const socket = socketIOClient(ENDPOINT, {
+            transports: ["websocket", "polling", "flashsocket"],
+        });
+        socket.on("newIssue", (data) => {
+            let temp_issues = [];
+            for (var key in data) {
+                const issueName = data[key];
+                for (var i = 0; i < issueName.length; i++) {
+                    temp_issues.push(issueName[i]);
+                }
+            }
+            setIssues(temp_issues);
+            console.log("Issues - ", temp_issues);
+        });
+
+        return () => socket.disconnect();
     }, []);
+
+    if (loading) {
+        return (
+            <Backdrop className={classes.backdrop} open={loading}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
+        );
+    }
 
     return (
         <div>
@@ -92,26 +112,36 @@ function Dashboard(props) {
                                 Issues
                             </ListSubheader>
                         </GridListTile>
-                        {issues.map((issue, index) => (
-                            <GridListTile
-                                key={index}
-                                cols={2}
-                                style={{
-                                    borderBottom: "0.1px solid black",
-                                }}
-                            >
-                                <div
-                                    onClick={() => setSelectedIssue(issue)}
+                        {issues.map((issue, index) => {
+                            return (
+                                <GridListTile
+                                    key={index}
+                                    cols={2}
                                     style={{
-                                        fontFamily: "inter",
-                                        fontSize: 19,
+                                        borderBottom: "0.1px solid black",
                                     }}
                                 >
-                                    <IconMapper severity={issue.severity} />
-                                    {issue.title}
-                                </div>
-                            </GridListTile>
-                        ))}
+                                    <div
+                                        onClick={() => {
+                                            setRRpair({
+                                                request: issue.request,
+                                                response: issue.response,
+                                            });
+                                            setSelectedIssue(issue);
+                                        }}
+                                        style={{
+                                            fontFamily: "inter",
+                                            fontSize: 19,
+                                        }}
+                                    >
+                                        <IconMapper
+                                            severity={issue.template.severity}
+                                        />
+                                        {issue.template.title}
+                                    </div>
+                                </GridListTile>
+                            );
+                        })}
                     </GridList>
                 </Grid>
                 <Grid item xs={6}>
@@ -142,7 +172,7 @@ function Dashboard(props) {
                                     <div>
                                         <h2>
                                             <u style={{ fontFamily: "inter" }}>
-                                                {selectedIssue.title}
+                                                {selectedIssue.template.title}
                                             </u>
                                         </h2>
 
@@ -153,7 +183,7 @@ function Dashboard(props) {
                                             }}
                                         >
                                             <b>Severity:</b>{" "}
-                                            {selectedIssue.severity}
+                                            {selectedIssue.template.severity}
                                         </div>
 
                                         <br />
@@ -161,7 +191,8 @@ function Dashboard(props) {
                                         <div
                                             dangerouslySetInnerHTML={{
                                                 __html:
-                                                    selectedIssue.description,
+                                                    selectedIssue.template
+                                                        .description,
                                             }}
                                             style={{
                                                 fontFamily: "inter",
@@ -179,7 +210,7 @@ function Dashboard(props) {
             </Grid>
 
             <div style={{ height: "40vh" }}>
-                Corresponding request response here!
+                <RenderRRpair />
             </div>
         </div>
     );

@@ -19,6 +19,7 @@ import DashboardIcon from "@material-ui/icons/Dashboard";
 import TimelineIcon from "@material-ui/icons/Timeline";
 import RepeatIcon from "@material-ui/icons/Repeat";
 import FastForwardIcon from "@material-ui/icons/FastForward";
+import PetsIcon from '@material-ui/icons/Pets';
 import BuildIcon from "@material-ui/icons/Build";
 
 // custom screens
@@ -29,6 +30,7 @@ import Resender from "../screens/Resender";
 import Fuzzer from "../screens/Fuzzer";
 import ProjectSwitcher from "./ProjectSwitcher";
 import Tools from "../screens/Tools";
+import SourceWolf from "../screens/SourceWolf";
 
 const drawerWidth = 240;
 
@@ -104,7 +106,7 @@ export default function Navigator() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
 
-    const [currentIndex, setCurrentIndex] = React.useState(0);
+    const [currentIndex, setCurrentIndex] = React.useState(1);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -126,6 +128,8 @@ export default function Navigator() {
                 return <FastForwardIcon />;
             case 4:
                 return <BuildIcon />;
+            case 5: 
+                return <PetsIcon />
             default:
                 return null;
         }
@@ -143,6 +147,8 @@ export default function Navigator() {
                 return "Fuzzer";
             case 4:
                 return "Tools";
+            case 5: 
+                return "SourceWolf";
             default:
                 return null;
         }
@@ -208,7 +214,7 @@ export default function Navigator() {
                 </div>
                 <Divider />
                 <List>
-                    {["Dashboard", "Proxy", "Resender", "Fuzzer", "Tools"].map(
+                    {["Dashboard", "Proxy", "Resender", "Fuzzer", "Tools", "Sourcewolf"].map(
                         (text, index) => (
                             <ListItem
                                 button
@@ -242,6 +248,9 @@ export default function Navigator() {
                 </div>
                 <div style={{ display: getDisplay(4) }}>
                     <Tools />
+                </div>
+                <div style={{ display: getDisplay(5) }}>
+                    <SourceWolf />
                 </div>
             </main>
         </div>
