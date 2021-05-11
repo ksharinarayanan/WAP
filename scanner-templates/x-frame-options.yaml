@@ -1,10 +1,10 @@
 id: x-frame-options
 title: "Click jacking"
-severity: medium
-description: A lame description to be added in later on!
+severity: low
+description: This issue was detected due to the absence of X-Frame-Options header in the response which allows for clickjacking attacks if the page has the ability to perform sensitive actions
 type: header
 presence: false
 header-key: X-Frame-Options
-header-value: Allow
+header-value: Deny
 location: response
 uniqueTo: host

@@ -30,10 +30,14 @@ router.use("/projects", projectAPI);
 router.use("/tools", toolsAPI);
 router.use("/sourcewolf", sourcewolfAPI);
 
-const template_ids = ["scanner-templates/x-frame-options.yaml"];
+const template_ids = [
+    "scanner-templates/x-frame-options.yaml",
+    "scanner-templates/xss-protection-disabled.yaml",
+];
 
 const issues = {
     "x-frame-options": [],
+    "xss-protection-disabled": [],
 };
 
 const hostPresent = (array, host) => {
@@ -54,14 +58,14 @@ const scanner = (request, response, eventEmitter) => {
         for (var i = 0; i < template_ids.length; i++) {
             let fileContents = fs.readFileSync(template_ids[i], "utf8");
             let template = yaml.loadAll(fileContents);
-
+            console.log(template);
             template = template[0];
 
             const issue = scan(request, response, template);
 
             if (issue !== undefined) {
                 if (template.uniqueTo === "host") {
-                    if (hostPresent(issues[`${issue}`], request.hostname)) {
+                    if (hostPresent(issues[`${issue}`], response.hostname)) {
                         // issue duplicate
                         console.log("Duplicate issue!");
                         return;
@@ -70,18 +74,18 @@ const scanner = (request, response, eventEmitter) => {
                 }
 
                 const detailedIssue = {
-                    request: request,
-                    response: response,
+                    request: response,
+                    response: request,
                     template: template,
                 };
 
                 issues[`${issue}`].push(detailedIssue);
-                console.log("New issue");
+                // console.log("New issue", issues);
                 eventEmitter.emit("newIssue", issues);
             }
         }
     } catch (e) {
-        console.log("Error while reading template files");
+        console.log("Error while reading template files", e);
     }
 };
 
@@ -124,7 +128,7 @@ router.post("/add/RRpair/", (req, res) => {
             res.status(200).json({ message: "Added!" });
         })
         .catch((err) => {
-            console.log("Error while adding rr pair!", err);
+            // console.log("Error while adding rr pair!");
             res.status(500).json({ message: "Failed to add the RR pair!" });
         });
 });

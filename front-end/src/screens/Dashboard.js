@@ -16,6 +16,7 @@ import WarningIcon from "@material-ui/icons/Warning";
 import AcUnitOutlinedIcon from "@material-ui/icons/AcUnitOutlined";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import socketIOClient from "socket.io-client";
+import LogViewer from "../components/proxy/LogViewer";
 const ENDPOINT = "http://127.0.0.1:4000";
 
 const useStyles = makeStyles({
@@ -28,6 +29,7 @@ function Dashboard(props) {
     const [issues, setIssues] = useState([]);
     const [selectedIssue, setSelectedIssue] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [rrPair, setRRpair] = useState(null);
 
     const classes = useStyles();
 
@@ -47,13 +49,29 @@ function Dashboard(props) {
         }
     };
 
+    const RenderRRpair = () => {
+        if (rrPair === null) {
+            return "Select an issue to see the corresponding RR pair";
+        }
+        return (
+            <LogViewer request={rrPair.request} response={rrPair.response} />
+        );
+    };
+
     useEffect(() => {
         const socket = socketIOClient(ENDPOINT, {
             transports: ["websocket", "polling", "flashsocket"],
         });
         socket.on("newIssue", (data) => {
-            alert("New issusse!");
-            setIssues((issues) => issues.concat(data));
+            let temp_issues = [];
+            for (var key in data) {
+                const issueName = data[key];
+                for (var i = 0; i < issueName.length; i++) {
+                    temp_issues.push(issueName[i]);
+                }
+            }
+            setIssues(temp_issues);
+            console.log("Issues - ", temp_issues);
         });
 
         return () => socket.disconnect();
@@ -94,26 +112,36 @@ function Dashboard(props) {
                                 Issues
                             </ListSubheader>
                         </GridListTile>
-                        {issues.map((issue, index) => (
-                            <GridListTile
-                                key={index}
-                                cols={2}
-                                style={{
-                                    borderBottom: "0.1px solid black",
-                                }}
-                            >
-                                <div
-                                    onClick={() => setSelectedIssue(issue)}
+                        {issues.map((issue, index) => {
+                            return (
+                                <GridListTile
+                                    key={index}
+                                    cols={2}
                                     style={{
-                                        fontFamily: "inter",
-                                        fontSize: 19,
+                                        borderBottom: "0.1px solid black",
                                     }}
                                 >
-                                    <IconMapper severity={issue.severity} />
-                                    {issue.title}
-                                </div>
-                            </GridListTile>
-                        ))}
+                                    <div
+                                        onClick={() => {
+                                            setRRpair({
+                                                request: issue.request,
+                                                response: issue.response,
+                                            });
+                                            setSelectedIssue(issue);
+                                        }}
+                                        style={{
+                                            fontFamily: "inter",
+                                            fontSize: 19,
+                                        }}
+                                    >
+                                        <IconMapper
+                                            severity={issue.template.severity}
+                                        />
+                                        {issue.template.title}
+                                    </div>
+                                </GridListTile>
+                            );
+                        })}
                     </GridList>
                 </Grid>
                 <Grid item xs={6}>
@@ -144,7 +172,7 @@ function Dashboard(props) {
                                     <div>
                                         <h2>
                                             <u style={{ fontFamily: "inter" }}>
-                                                {selectedIssue.title}
+                                                {selectedIssue.template.title}
                                             </u>
                                         </h2>
 
@@ -155,7 +183,7 @@ function Dashboard(props) {
                                             }}
                                         >
                                             <b>Severity:</b>{" "}
-                                            {selectedIssue.severity}
+                                            {selectedIssue.template.severity}
                                         </div>
 
                                         <br />
@@ -163,7 +191,8 @@ function Dashboard(props) {
                                         <div
                                             dangerouslySetInnerHTML={{
                                                 __html:
-                                                    selectedIssue.description,
+                                                    selectedIssue.template
+                                                        .description,
                                             }}
                                             style={{
                                                 fontFamily: "inter",
@@ -181,7 +210,7 @@ function Dashboard(props) {
             </Grid>
 
             <div style={{ height: "40vh" }}>
-                Corresponding request response here!
+                <RenderRRpair />
             </div>
         </div>
     );
