@@ -136,14 +136,11 @@ function Tools(props) {
 
     return (
         <div>
-            <h2 style={{ fontFamily: "inter" }} >
-              Tools playground!
-            </h2>
+            <ModalWithButton buttonContent="Add tool" />
             <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 onChange={handleChange}
-                style={{ width: '30vw', marginTop: 20 }}
             >
                 {toolsList}
             </Select>
@@ -158,18 +155,13 @@ function Tools(props) {
                 View tools!
             </Button> */}
             <br></br>
-            <div>
-            
-              <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={ExecuteCommand}
-                  style={{ margin: 20, float: 'left' }}
-              >
-                  Execute
-              </Button>
-              <ModalWithButton buttonContent="Add tool" />
-            </div>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={ExecuteCommand}
+            >
+                Execute
+            </Button>
             <br></br>
             <div>
                 {content.split("\n").map((i, key) => {

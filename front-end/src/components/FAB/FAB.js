@@ -14,6 +14,7 @@ function FAB({ icon, text, ...other }) {
                             marginLeft: 10,
                             fontFamily: "inter",
                             fontWeight: 600,
+                            fontSize: 12
                         }}
                     >
                         {text}

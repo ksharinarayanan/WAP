@@ -13,7 +13,7 @@ export default function ModalWithButton({ buttonContent }) {
     });
 
     return (
-        <div>
+        <div style={{ paddingTop: 10, marginTop: 10 }}>
             <FAB
                 icon={<AddIcon />}
                 text={buttonContent}
