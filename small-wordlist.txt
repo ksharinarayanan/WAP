@@ -1,0 +1,7 @@
+blog
+mail
+test
+new
+hello
+signin
+accounts

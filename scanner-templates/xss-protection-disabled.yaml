@@ -1,0 +1,10 @@
+id: xss-protection-disabled
+title: "Browser built in XSS protection disabled"
+severity: informational
+description: The built in protection for XSS (cross site scripting) has been disabled by the site by injecting the header X-XSS-Protection with a value of 0 in the response.
+type: header
+presence: true
+header-key: X-XSS-Protection
+header-value: 0
+location: response
+uniqueTo: host
