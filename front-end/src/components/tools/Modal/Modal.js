@@ -92,7 +92,7 @@ function Modal({ visible, closeModal }) {
       <Paper
         elevation={24}
         style={{
-          width: "50vw"
+          width: "50vw",
         }}
         alignitems="center"
       >

@@ -42,7 +42,6 @@ function Tools(props) {
   };
 
   const ExecuteCommand = () => {
-
     const command = selectedTool + " " + argument;
 
     setLoading(true);
@@ -165,15 +164,17 @@ function Tools(props) {
         Execute
       </Button>
       <br></br>
-      {loading ? <Backdrop open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop> :
-      <div>
-        {content.split("\n").map((i, key) => {
-          return <p key={key}>{i}</p>;
-        })}
-      </div>
-      }
+      {loading ? (
+        <Backdrop open={loading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      ) : (
+        <div>
+          {content.split("\n").map((i, key) => {
+            return <p key={key}>{i}</p>;
+          })}
+        </div>
+      )}
       <Button
         variant="contained"
         color="primary"
