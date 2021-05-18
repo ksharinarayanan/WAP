@@ -24,15 +24,15 @@ app.use("/", routes);
 
 // connecting to mongo DB
 mongoose
-    .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
-    .catch((err) => console.log(err));
+  .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+  .catch((err) => console.log(err));
 
 const port = process.env.PORT || 4000;
 
 const server = http.createServer(app);
 
 server.listen(port, () =>
-    console.log(`Backend node JS server started at port ${port}`)
+  console.log(`Backend node JS server started at port ${port}`)
 );
 
 // Event emitter
@@ -43,10 +43,10 @@ app.set("eventEmitter", eventEmitter);
 const io = socketIO(server);
 
 io.on("connection", (socket) => {
-    eventEmitter.on("newRRpair", (data) => {
-        socket.emit("newRRpair", data);
-    });
-    eventEmitter.on("newIssue", (data) => {
-        socket.emit("newIssue", data);
-    });
+  eventEmitter.on("newRRpair", (data) => {
+    socket.emit("newRRpair", data);
+  });
+  eventEmitter.on("newIssue", (data) => {
+    socket.emit("newIssue", data);
+  });
 });

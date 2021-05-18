@@ -18,45 +18,45 @@
 
 ## Sections
 
--   <a href="#features">Features</a>
--   <a href="#installation">Installation</a>
--   <a href="#usage">Usage</a>
--   <a href="#workflow">How can this be integrated into your workflow?</a>
--   <a href="#todo">To do</a>
--   <a href="#update">Updating SourceWolf</a>
--   <a href="#contributions">Contributions</a>
--   <a href="#issues">Issues</a>
--   <a href="#naming">File naming conventions</a>
+- <a href="#features">Features</a>
+- <a href="#installation">Installation</a>
+- <a href="#usage">Usage</a>
+- <a href="#workflow">How can this be integrated into your workflow?</a>
+- <a href="#todo">To do</a>
+- <a href="#update">Updating SourceWolf</a>
+- <a href="#contributions">Contributions</a>
+- <a href="#issues">Issues</a>
+- <a href="#naming">File naming conventions</a>
 
 <div id="features">
 <h3> What can SourceWolf do?</h3>
 
--   Crawl through responses to find hidden endpoints, either by sending requests, or from the local response files (if any).
+- Crawl through responses to find hidden endpoints, either by sending requests, or from the local response files (if any).
 
--   Create a list of javascript variables found in the source
+- Create a list of javascript variables found in the source
 
--   Extract all the social media links from the websites to identify potentially broken links
+- Extract all the social media links from the websites to identify potentially broken links
 
--   Brute forcing host using a wordlist.
+- Brute forcing host using a wordlist.
 
--   Get the status codes for a list of URLs / Filtering out the live domains from a list of hosts.
+- Get the status codes for a list of URLs / Filtering out the live domains from a list of hosts.
 
 All the features mentioned above execute with great speed.
 
--   SourceWolf uses the **Session** module from the requests library, which means, it reuses the TCP connection, making it really fast.
+- SourceWolf uses the **Session** module from the requests library, which means, it reuses the TCP connection, making it really fast.
 
--   SourceWolf provides you with an option to crawl the responses files **locally** so that you aren't sending requests again to an endpoint, whose response you already have a copy of.
+- SourceWolf provides you with an option to crawl the responses files **locally** so that you aren't sending requests again to an endpoint, whose response you already have a copy of.
 
--   The final endpoints are in a complete form with a host like `https://example.com/api/admin` are not as `/api/admin`. This can come useful, when you are scanning a list of hosts.
+- The final endpoints are in a complete form with a host like `https://example.com/api/admin` are not as `/api/admin`. This can come useful, when you are scanning a list of hosts.
 
 </div>
 <hr>
 
 ### Installation
 
--   git clone https://github.com/ksharinarayanan/SourceWolf (or) Download the latest <a href="https://github.com/ksharinarayanan/SourceWolf/releases">release</a>!
--   cd SourceWolf/
--   pip3 install -r requirements.txt
+- git clone https://github.com/ksharinarayanan/SourceWolf (or) Download the latest <a href="https://github.com/ksharinarayanan/SourceWolf/releases">release</a>!
+- cd SourceWolf/
+- pip3 install -r requirements.txt
 
 <hr>
 
@@ -93,7 +93,7 @@ All the features mentioned above execute with great speed.
 
 <div id="test">SourceWolf has <b>3 modes</b>, which corresponds to it's <b>3 core features</b>.</div>
 
--   #### Crawl response mode:
+- #### Crawl response mode:
 
 ![](https://github.com/ksharinarayanan/SourceWolf/blob/master/images/crawl.JPG)
 
@@ -121,7 +121,7 @@ https://example.com/hitme
 
 `crawl_output` specified using the `-c` flag is used to store the output, inside a directory which SourceWolf produces by crawling the HTTP response files, stored inside the `output/` directory (currently only endpoints)
 
-The ```crawl_output/``` directory contains:
+The `crawl_output/` directory contains:
 
 endpoints - All the endpoints found
 <br>
@@ -143,7 +143,7 @@ Only the flag `-l` is replaced by `-u`, everything else remains the same.
 
 <br>
 
--   #### Brute force mode
+- #### Brute force mode
 
 ![](https://github.com/ksharinarayanan/SourceWolf/blob/master/images/brute.JPG)
 
@@ -157,7 +157,7 @@ SourceWolf replace the `FUZZ` keyword from the `-b` value with the words from wo
 
 `-s` will store the output in a file called `status`
 
--   #### Probing mode
+- #### Probing mode
 
 > Screenshot not included as the output looks similar to `crawl response` mode.
 
@@ -218,8 +218,8 @@ This core purpose explains the modular way in which the files are written.
 
 ## To do
 
--   Generate a custom wordlist for a target from the words obtained in the source.
--   Automate finding any leaked keys.
+- Generate a custom wordlist for a target from the words obtained in the source.
+- Automate finding any leaked keys.
 
 </div>
 
@@ -290,9 +290,9 @@ To crawl the files locally, you must follow some naming conventions. These conve
 
 Consider an URL `https://example.com/api/`
 
--   Remove the protocol and the trailing slash (if any) from the URL --> `example.com/api`
--   Replace '/' with '@' --> `example.com@api`
--   Save the response as a txt file with the file name obtained above.
+- Remove the protocol and the trailing slash (if any) from the URL --> `example.com/api`
+- Replace '/' with '@' --> `example.com@api`
+- Save the response as a txt file with the file name obtained above.
 
 So the file finally looks like `example.com@api.txt`
 

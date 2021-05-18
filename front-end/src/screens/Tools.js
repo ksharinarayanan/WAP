@@ -4,24 +4,24 @@ import {
   Backdrop,
   CircularProgress,
   IconButton,
-} from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
-import ModalWithButton from '../components/tools/Modal/ModalWithButton';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import '@fontsource/inter';
-import axios from 'axios';
-import Toast from '../components/Toast';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
+} from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import ModalWithButton from "../components/tools/Modal/ModalWithButton";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import "@fontsource/inter";
+import axios from "axios";
+import Toast from "../components/Toast";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import TextField from "@material-ui/core/TextField";
 
 function Tools(props) {
   const [open, setOpen] = useState(false);
   const [tools, setTools] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState("");
   const [selectedTool, setSelectedTool] = useState(null);
-  const [argument, setArgument] = useState('');
+  const [argument, setArgument] = useState("");
 
   const [toast, setToast] = useState(null);
 
@@ -31,7 +31,7 @@ function Tools(props) {
 
   const handleOpen = () => {
     if (tools.length === 0) {
-      alert('No tools added!');
+      alert("No tools added!");
       return;
     }
     setOpen(true);
@@ -42,25 +42,24 @@ function Tools(props) {
   };
 
   const ExecuteCommand = () => {
-    console.log(selectedTool + ' ' + argument);
 
-    const command = selectedTool + ' ' + argument;
+    const command = selectedTool + " " + argument;
 
     setLoading(true);
 
     axios
-      .post('/api/tools/execute/', {
+      .post("/api/tools/execute/", {
         command: command,
       })
       .then((res) => {
-        console.log('Output - ', res.data);
+        console.log("Output - ", res.data);
 
         setContent(res.data);
-        alert('Output in the console!');
+        alert("Output in the console!");
       })
       .catch((err) => {
-        console.log('Error', err);
-        alert('Error occurred!');
+        console.log("Error", err);
+        alert("Error occurred!");
       })
       .finally(() => {
         setLoading(false);
@@ -73,35 +72,35 @@ function Tools(props) {
     }
 
     axios
-      .post('/api/tools/delete', { tool: tool })
+      .post("/api/tools/delete", { tool: tool })
       .then((res) => {
-        console.log('Res', res);
+        // console.log("Res", res);
         setTools((tools) => tools.filter(modifyState));
         const msg = {
-          type: 'success',
-          msg: 'Tool deleted!',
+          type: "success",
+          msg: "Tool deleted!",
         };
         setToast(msg);
       })
       .catch((err) => {
         const msg = {
-          type: 'error',
-          msg: 'Failed to delete the tool!',
+          type: "error",
+          msg: "Failed to delete the tool!",
         };
         setToast(msg);
-        console.log('Error', err);
+        console.log("Error", err);
       });
   };
 
   useEffect(() => {
     (async function fetchTools() {
       axios
-        .get('/api/tools/get/')
+        .get("/api/tools/get/")
         .then((res) => {
           setTools(res.data);
         })
         .catch((err) => {
-          console.log('Error while fetching tools!', err);
+          console.log("Error while fetching tools!", err);
         })
         .finally(() => {
           // console.log("Fetched tools!");
@@ -119,13 +118,13 @@ function Tools(props) {
       );
     });
 
-  if (loading) {
-    return (
-      <Backdrop open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <Backdrop open={loading}>
+  //       <CircularProgress color="inherit" />
+  //     </Backdrop>
+  //   );
+  // }
   const handleChange = (event) => {
     setSelectedTool(event.target.value);
   };
@@ -141,7 +140,7 @@ function Tools(props) {
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         onChange={handleChange}
-        style={{ width: '10vw', marginTop: 30 }}
+        style={{ width: "10vw", marginTop: 30 }}
       >
         {toolsList}
       </Select>
@@ -166,52 +165,27 @@ function Tools(props) {
         Execute
       </Button>
       <br></br>
+      {loading ? <Backdrop open={loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop> :
       <div>
-        {content.split('\n').map((i, key) => {
+        {content.split("\n").map((i, key) => {
           return <p key={key}>{i}</p>;
         })}
       </div>
+      }
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={ExecuteCommand}
+        style={{ marginTop: 20 }}
+        onClick={() => {
+          setContent("");
+        }}
+      >
+        Clear output
+      </Button>
 
-      {/* <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="simple-modal-title"
-          aria-describedby="simple-modal-description"
-        >
-          <div
-            style={{
-              width: '45vw',
-              position: 'absolute',
-              top: '35vh',
-              left: '35vw',
-              backgroundColor: '#333',
-              color: '#fff',
-              fontFamily: 'inter',
-              fontSize: 21,
-            }}
-          >
-            {tools.map((tool, key) => {
-              return (
-                <div key={key} style={{ margin: 10, flex: 1 }}>
-                  {tool.name} -
-                  <ExecuteButton tool={tool} />{' '}
-                  <IconButton>
-                    <DeleteOutlineIcon
-                      style={{
-                        marginLeft: 30,
-                        color: '#fff',
-                      }}
-                      onClick={() => {
-                        deleteTool(tool);
-                      }}
-                    />
-                  </IconButton>
-                  <br />
-                </div>
-              );
-            })}
-          </div>
-        </Modal> */}
       <Toast open={toast != null} toggleToast={toggleToast} toast={toast} />
     </div>
   );

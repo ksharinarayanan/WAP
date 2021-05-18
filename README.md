@@ -1,6 +1,4 @@
-# WAP - Web attacking proxy	 
-
-
+# WAP - Web attacking proxy
 
 Open source alternative to burpsuite written using React JS and node JS!
 
@@ -14,37 +12,32 @@ Open source alternative to burpsuite written using React JS and node JS!
 
 **Installation**
 
-Currently, we don't have a one click installation setup. Though setting up is really easy, it should be up and running within about 5 minutes. 
+Currently, we don't have a one click installation setup. Though setting up is really easy, it should be up and running within about 5 minutes.
 
 > Though the below setup is demonstrated using `yarn` , the equivalent commands also work with `npm`
 
-* Git clone this repository
+- Git clone this repository
 
-* `yarn install`
+- `yarn install`
 
-* `cd Proxy && yarn install && cd ..`
+- `cd Proxy && yarn install && cd ..`
 
-* `cd front-end && yarn install`
+- `cd front-end && yarn install`
 
-* `yarn global add anyproxy && anyproxy`
+- `yarn global add anyproxy && anyproxy`
 
-* Now, a proxy server runs on port `8001` and a web interface on `8002` . Navigate to the web interface at `localhost:8002`,  and you can download the CA certificate from the left sidebar.
+- Now, a proxy server runs on port `8001` and a web interface on `8002` . Navigate to the web interface at `localhost:8002`, and you can download the CA certificate from the left sidebar.
 
-* After downloading it, import it inside your web browser of choice just like you would do with burpsuite.
+- After downloading it, import it inside your web browser of choice just like you would do with burpsuite.
 
-* Navigate to the root directory of the cloned repository.
+- Navigate to the root directory of the cloned repository.
 
-* `cd Proxy/ and yarn start `
+- `cd Proxy/ and yarn start `
 
-* Let that process run and open a new terminal again in the root directory of the folder.
+- Let that process run and open a new terminal again in the root directory of the folder.
 
-* Run `yarn run dev`
-
-  
+- Run `yarn run dev`
 
   That's it, an electron app opens up and you are ready to go :rocket:
 
-
-
 **The project is still in it's nascent state, and contributions of any form would be really helpful 😁**
-

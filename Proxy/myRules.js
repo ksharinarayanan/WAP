@@ -1,86 +1,86 @@
 const axios = require("axios");
 
 function addRRpair(RRpair) {
-    const request = RRpair.request;
-    const response = RRpair.response;
-    let projectID;
-    var fs = require("fs");
-    fs.readFile("activeProject", "utf8", (err, data) => {
-        if (err) console.log("Error", err);
-        projectID = data;
-        const cookie = "projectID=" + projectID + ";";
+  const request = RRpair.request;
+  const response = RRpair.response;
+  let projectID;
+  var fs = require("fs");
+  fs.readFile("activeProject", "utf8", (err, data) => {
+    if (err) console.log("Error", err);
+    projectID = data;
+    const cookie = "projectID=" + projectID + ";";
 
-        axios
-            .post(
-                "http://localhost:4000/api/add/RRpair",
-                {
-                    request: request,
-                    response: response,
-                },
-                {
-                    withCredentials: true,
-                    headers: {
-                        Cookie: cookie,
-                    },
-                }
-            )
-            .then((response) => {})
-            .catch((err) => {
-                throw err;
-            });
-    });
+    axios
+      .post(
+        "http://localhost:4000/api/add/RRpair",
+        {
+          request: request,
+          response: response,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            Cookie: cookie,
+          },
+        }
+      )
+      .then((response) => {})
+      .catch((err) => {
+        throw err;
+      });
+  });
 }
 
 function isImage(request, response) {
-    const accept = request.headers["Accept"];
-    const content_type = response.header["Content-Type"];
-    if (
-        (accept !== undefined && accept.substr(0, 5) === "image") ||
-        (content_type !== undefined && content_type.substr(0, 5) === "image")
-    ) {
-        return true;
-    }
-    return false;
+  const accept = request.headers["Accept"];
+  const content_type = response.header["Content-Type"];
+  if (
+    (accept !== undefined && accept.substr(0, 5) === "image") ||
+    (content_type !== undefined && content_type.substr(0, 5) === "image")
+  ) {
+    return true;
+  }
+  return false;
 }
 
 module.exports = {
-    summary: "a rule to hack response",
-    *beforeSendResponse(requestDetail, responseDetail) {
-        const newResponse = responseDetail.response;
+  summary: "a rule to hack response",
+  *beforeSendResponse(requestDetail, responseDetail) {
+    const newResponse = responseDetail.response;
 
-        const dont_intercept = ["image/jpeg", "image/png", "image/webp"];
+    const dont_intercept = ["image/jpeg", "image/png", "image/webp"];
 
-        const parsedRequest = {
-            ...requestDetail.requestOptions,
-            protocol: requestDetail.protocol,
-            url: requestDetail.url,
-            body: requestDetail.requestData.toString(),
-        };
+    const parsedRequest = {
+      ...requestDetail.requestOptions,
+      protocol: requestDetail.protocol,
+      url: requestDetail.url,
+      body: requestDetail.requestData.toString(),
+    };
 
-        // if (checkOccurence(newResponse.header["Content-Type"], dont_intercept)) {
-        if (isImage(parsedRequest, newResponse)) {
-            return new Promise((resolve, reject) => {
-                resolve({ response: newResponse });
-            });
-        }
+    // if (checkOccurence(newResponse.header["Content-Type"], dont_intercept)) {
+    if (isImage(parsedRequest, newResponse)) {
+      return new Promise((resolve, reject) => {
+        resolve({ response: newResponse });
+      });
+    }
 
-        const body = newResponse.body.toString();
-        newResponse.body = body;
+    const body = newResponse.body.toString();
+    newResponse.body = body;
 
-        const RRpair = {
-            request: parsedRequest,
-            response: newResponse,
-        };
+    const RRpair = {
+      request: parsedRequest,
+      response: newResponse,
+    };
 
-        addRRpair(RRpair);
+    addRRpair(RRpair);
 
-        return new Promise((resolve, reject) => {
-            resolve({ response: newResponse });
-        });
-        // }
-    },
+    return new Promise((resolve, reject) => {
+      resolve({ response: newResponse });
+    });
+    // }
+  },
 
-    *beforeSendRequest(requestDetail) {
-        var input = requestDetail;
-    },
+  *beforeSendRequest(requestDetail) {
+    var input = requestDetail;
+  },
 };

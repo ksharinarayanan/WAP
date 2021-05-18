@@ -1,47 +1,47 @@
-import React from 'react';
-import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import TimelineIcon from '@material-ui/icons/Timeline';
-import RepeatIcon from '@material-ui/icons/Repeat';
-import FastForwardIcon from '@material-ui/icons/FastForward';
-import PetsIcon from '@material-ui/icons/Pets';
-import BuildIcon from '@material-ui/icons/Build';
+import React from "react";
+import clsx from "clsx";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Drawer from "@material-ui/core/Drawer";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import List from "@material-ui/core/List";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import DashboardIcon from "@material-ui/icons/Dashboard";
+import TimelineIcon from "@material-ui/icons/Timeline";
+import RepeatIcon from "@material-ui/icons/Repeat";
+import FastForwardIcon from "@material-ui/icons/FastForward";
+import PetsIcon from "@material-ui/icons/Pets";
+import BuildIcon from "@material-ui/icons/Build";
 
 // custom screens
 
-import Dashboard from '../screens/Dashboard';
-import Proxy from '../screens/Proxy';
-import Resender from '../screens/Resender';
-import Fuzzer from '../screens/Fuzzer';
-import ProjectSwitcher from './ProjectSwitcher';
-import Tools from '../screens/Tools';
-import SourceWolf from '../screens/SourceWolf';
+import Dashboard from "../screens/Dashboard";
+import Proxy from "../screens/Proxy";
+import Resender from "../screens/Resender";
+import Fuzzer from "../screens/Fuzzer";
+import ProjectSwitcher from "./ProjectSwitcher";
+import Tools from "../screens/Tools";
+import SourceWolf from "../screens/SourceWolf";
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
-    backgroundColor: '#fff',
+    display: "flex",
+    backgroundColor: "#fff",
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
+    transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
   appBarShift: {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
+    transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
@@ -58,35 +58,35 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 36,
   },
   hide: {
-    display: 'none',
+    display: "none",
   },
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
-    whiteSpace: 'nowrap',
+    whiteSpace: "nowrap",
   },
   drawerOpen: {
     width: drawerWidth,
-    transition: theme.transitions.create('width', {
+    transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
   drawerClose: {
-    transition: theme.transitions.create('width', {
+    transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    overflowX: 'hidden',
+    overflowX: "hidden",
     width: theme.spacing(7) + 1,
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up("sm")]: {
       width: theme.spacing(9) + 1,
     },
   },
   toolbar: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
   projectSwitcher: {
-    position: 'absolute',
+    position: "absolute",
     right: 20,
   },
 }));
@@ -138,17 +138,17 @@ export default function Navigator() {
   const getTitle = (index) => {
     switch (index) {
       case 0:
-        return 'Dashboard';
+        return "Dashboard";
       case 1:
-        return 'Proxy';
+        return "Proxy";
       case 2:
-        return 'Resender';
+        return "Resender";
       // case 3:
       //     return "Fuzzer";
       case 4:
-        return 'Tools';
+        return "Tools";
       case 5:
-        return 'SourceWolf';
+        return "SourceWolf";
       default:
         return null;
     }
@@ -156,9 +156,9 @@ export default function Navigator() {
 
   const getDisplay = (index) => {
     if (currentIndex === index) {
-      return 'block';
+      return "block";
     }
-    return 'none';
+    return "none";
   };
 
   return (
@@ -205,7 +205,7 @@ export default function Navigator() {
       >
         <div className={classes.toolbar}>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? (
+            {theme.direction === "rtl" ? (
               <ChevronRightIcon />
             ) : (
               <ChevronLeftIcon />
@@ -215,12 +215,12 @@ export default function Navigator() {
         <Divider />
         <List>
           {[
-            'Dashboard',
-            'Proxy',
-            'Resender',
-            'Fuzzer',
-            'Tools',
-            'Sourcewolf',
+            "Dashboard",
+            "Proxy",
+            "Resender",
+            "Fuzzer",
+            "Tools",
+            "Sourcewolf",
           ].map((text, index) => (
             <ListItem
               button

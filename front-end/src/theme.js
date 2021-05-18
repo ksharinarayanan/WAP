@@ -3,14 +3,14 @@ import "@fontsource/cascadia-code";
 import "@fontsource/inter";
 
 const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: "#7b53c1",
-        },
+  palette: {
+    primary: {
+      main: "#7b53c1",
     },
-    typography: {
-        fontFamily: "cascadia code",
-    },
+  },
+  typography: {
+    fontFamily: "cascadia code",
+  },
 });
 
 export default theme;
